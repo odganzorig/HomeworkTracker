@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@android:drawable/sym_action_email"
+            android:title="@string/nav_home"
+            android:checked="true" />
+        <item
+            android:id="@+id/nav_classes"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="@string/nav_classes" />
+        <item
+            android:id="@+id/nav_homework"
+            android:icon="@android:drawable/ic_menu_send"
+            android:title="@string/nav_homework" />
+        <item
+            android:id="@+id/nav_Calendar"
+            android:icon="@android:drawable/ic_menu_delete"
+            android:title="@string/nav_Calendar" />
+    </group>
+
+</menu>

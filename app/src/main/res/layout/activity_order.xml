@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context=".OrderActivity">
+
+<include
+    layout="@layout/toolbar_main"
+    android:id="@+id/toolbar" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="15"
+        android:hint="@string/hint" />
+
+    <Spinner
+        android:id="@+id/related_class"
+        android:layout_width="313dp"
+        android:layout_height="45dp"
+        android:ems="15" />
+
+    <Spinner
+        android:id="@+id/type"
+        android:layout_width="313dp"
+        android:layout_height="45dp"
+        android:ems="15"
+        android:entries="@array/homework_type"/>
+
+    <DatePicker
+        android:id="@+id/dueDate"
+        android:layout_width="313dp"
+        android:layout_height="114dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner" />
+
+    <TimePicker
+        android:id="@+id/dueTime"
+        android:layout_width="313dp"
+        android:layout_height="126dp"
+        android:timePickerMode="spinner" />
+
+    <Spinner
+        android:id="@+id/priority"
+        android:layout_width="313dp"
+        android:layout_height="45dp"
+        android:ems="15"
+        android:entries="@array/homework_priority"/>
+
+    <Spinner
+        android:id="@+id/reminder"
+        android:layout_width="313dp"
+        android:layout_height="45dp"
+        android:ems="15" />
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:onClick="onAddHomework"
+        android:text="@string/add" />
+
+</LinearLayout>

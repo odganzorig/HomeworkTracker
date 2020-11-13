@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">HomeworkTracker</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_top">Top fragment</string>
+    <string name="home_tab">Home</string>
+    <string name="homework_tab">Homework</string>
+    <string name="classes_tab">Classes</string>
+    <string name="calendar_tab">Calendar</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_homework">Homework</string>
+    <string name="nav_classes">Classes</string>
+    <string name="nav_Calendar">Calendar</string>
+    <string name="nav_open_drawer">Open navigation drawer</string>
+    <string name="nav_close_drawer">Close navigation drawer</string>
+    <string name="add_classes">Add Classes</string>
+    <string name="add_classes_title">Add Classes</string>
+    <string name="add_homework">Add Homework</string>
+    <string name="add_homework_title">Add Homework</string>
+    <string name="hw_description">Description</string>
+    <string name="add">Add Homework</string>
+    <string name="hint">Enter a description</string>
+    <string name="hint1">Enter a class</string>
+    <string name="hint2">Enter a type (Lab, paper, etc.)</string>
+    <string name="hint3">Enter a due date (m/d/y)</string>
+    <string name="hint4">Enter a class name</string>
+    <string name="hint7">Enter an instructor name</string>
+    <string-array name="homework_type">
+        <item>Read</item>
+        <item>Paper</item>
+        <item>Test</item>
+        <item>Presentation</item>
+        <item>Lab</item>
+        <item>Final</item>
+        <item>Midterm</item>
+        <item>Quiz</item>
+        <item>Project</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="homework_priority">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+        <item>Very high</item>
+    </string-array>
+    <string-array name="class_days">
+        <item>MWF</item>
+        <item>TR</item>
+        <item>MTWRF</item>
+        <item>Everyday</item>
+        <item>On weekends</item>
+    </string-array>
+</resources>

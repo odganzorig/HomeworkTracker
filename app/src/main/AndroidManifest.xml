@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.homeworktracker">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".AddClassesActivity"
+            android:label="@string/add_classes"
+            android:parentActivityName=".ClassesFragment">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeworkFragment" />
+        </activity>
+        <activity
+            android:name=".OrderActivity"
+            android:label="@string/add_homework"
+            android:parentActivityName=".HomeworkFragment">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeworkFragment" />
+        </activity>
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".HomeworkFragment"
+            tools:ignore="Instantiatable">
+        </activity>
+        <activity
+            android:name=".ClassesFragment"
+            tools:ignore="Instantiatable">
+        </activity>
+
+        <uses-library android:name="android.test.base"
+            android:required="false" />
+        <uses-library android:name="android.test.mock"
+            android:required="false" />
+    </application>
+
+
+</manifest>

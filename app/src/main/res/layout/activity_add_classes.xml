@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AddClassesActivity">
+
+    <include
+        layout="@layout/toolbar_main"
+        android:id="@+id/toolbar" />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="15"
+        android:hint="@string/hint4" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose a class start date" />
+
+    <DatePicker
+        android:id="@+id/startDate"
+        android:layout_width="315dp"
+        android:layout_height="114dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose a class end date" />
+
+    <DatePicker
+        android:id="@+id/endDate"
+        android:layout_width="315dp"
+        android:layout_height="110dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner" />
+
+    <EditText
+        android:id="@+id/instructor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="15"
+        android:hint="@string/hint7" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose class days" />
+
+    <Spinner
+        android:id="@+id/class_days"
+        android:layout_width="313dp"
+        android:layout_height="45dp"
+        android:ems="15"
+        android:entries="@array/class_days" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose a class time" />
+
+    <TimePicker
+        android:id="@+id/classTime"
+        android:layout_width="313dp"
+        android:layout_height="126dp"
+        android:timePickerMode="spinner" />
+
+    <Button
+        android:id="@+id/addClasses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onAddClass"
+        android:text="Add the class" />
+
+
+</LinearLayout>
