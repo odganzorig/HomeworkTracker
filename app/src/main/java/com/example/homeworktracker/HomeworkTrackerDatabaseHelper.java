@@ -18,7 +18,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE HOMEWORK ("
                 + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "DESCRIPTION TEXT, "
-                + "CLASS_ID INTEGER, "
+                + "CLASS_NAME TEXT, "
                 + "TYPE TEXT, "
                 + "DUE_DATE TEXT, "
                 + "DUE_TIME TEXT, "

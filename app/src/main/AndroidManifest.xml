@@ -10,7 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddClassesActivity"
+        <activity android:name=".ClassActivity"></activity>
+        <activity
+            android:name=".AddClassesActivity"
             android:label="@string/add_classes"
             android:parentActivityName=".ClassesFragment">
             <meta-data
@@ -34,18 +36,17 @@
         </activity>
         <activity
             android:name=".HomeworkFragment"
-            tools:ignore="Instantiatable">
-        </activity>
+            tools:ignore="Instantiatable"></activity>
         <activity
             android:name=".ClassesFragment"
-            tools:ignore="Instantiatable">
-        </activity>
+            tools:ignore="Instantiatable"></activity>
 
-        <uses-library android:name="android.test.base"
+        <uses-library
+            android:name="android.test.base"
             android:required="false" />
-        <uses-library android:name="android.test.mock"
+        <uses-library
+            android:name="android.test.mock"
             android:required="false" />
     </application>
-
 
 </manifest>

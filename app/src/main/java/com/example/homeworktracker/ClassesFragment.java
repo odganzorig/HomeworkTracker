@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.AdapterView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.content.Intent;
@@ -95,6 +96,23 @@ public class ClassesFragment extends Fragment {
             Toast toast = Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT);
             toast.show();
         }
+
+        //Create a listener to listen for clicks in the list view
+        AdapterView.OnItemClickListener itemClickListener =
+                new AdapterView.OnItemClickListener(){
+                    public void onItemClick(AdapterView<?> listClasses,
+                                            View itemView,
+                                            int position,
+                                            long id) {
+                        //Pass the class the user clicks on to ClassActivity
+                        Intent intent = new Intent(getActivity(), ClassActivity.class);
+                        intent.putExtra(ClassActivity.EXTRA_CLASSID, (int) id);
+                        startActivity(intent);
+                    }
+                };
+        //Assign the listener to the list view
+        listClasses.setOnItemClickListener(itemClickListener);
+
         return rootView;
     }
 
