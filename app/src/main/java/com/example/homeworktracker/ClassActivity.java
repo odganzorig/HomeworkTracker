@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.TextView;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.homeworktracker.model.Class;
 
 public class ClassActivity extends AppCompatActivity {
 
@@ -75,6 +79,23 @@ public class ClassActivity extends AppCompatActivity {
         } catch(SQLiteException e) {
             Toast toast = Toast.makeText(this, "Database unavailable", Toast.LENGTH_SHORT);
             toast.show();
+        }
+    }
+
+    public void onDeleteClass(View view) {
+        Class sampleClass = new Class();
+        TextView name = findViewById(R.id.class_name);
+        sampleClass.class_name = name.getText().toString();
+
+        HomeworkTrackerDatabaseHelper databaseHelper = HomeworkTrackerDatabaseHelper.getInstance(this);
+        //databaseHelper.deleteClass(sampleClass);
+        if(databaseHelper.deleteClass(sampleClass) == 0)
+        {
+            Toast.makeText(this, "Delete Failure", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Delete Success", Toast.LENGTH_SHORT).show();
         }
     }
 }

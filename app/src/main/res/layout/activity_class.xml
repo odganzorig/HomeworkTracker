@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AddClassesActivity">
+    tools:context=".ClassActivity">
 
     <include
         layout="@layout/toolbar_main"
@@ -39,5 +39,12 @@
         android:id="@+id/class_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/deleteClass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onDeleteClass"
+        android:text="Delete the class" />
 
 </LinearLayout>

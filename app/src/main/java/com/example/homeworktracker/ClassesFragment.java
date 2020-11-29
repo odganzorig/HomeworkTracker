@@ -114,7 +114,21 @@ public class ClassesFragment extends Fragment {
         listClasses.setOnItemClickListener(itemClickListener);
 
         return rootView;
+
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Cursor newCursor = db.query("CLASSES",
+                new String[]{"_id", "NAME"},
+                null, null, null, null, null);
+        ListView listClasses = (ListView) getView().findViewById(R.id.list_classes);
+        SimpleCursorAdapter adapter = (SimpleCursorAdapter) listClasses.getAdapter();
+        adapter.changeCursor(newCursor);
+        cursor = newCursor;
+    }
+
 
     @Override
     public void onDestroy(){

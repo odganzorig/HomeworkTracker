@@ -5,14 +5,12 @@ import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import android.util.Pair;
-import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
+
 import com.google.common.truth.Truth.assertThat;
-import java.util.List;
-import org.junit.Before;
+
+import org.junit.jupiter.api.BeforeEach;
 import static org.junit.Assert.*;
 
 /**

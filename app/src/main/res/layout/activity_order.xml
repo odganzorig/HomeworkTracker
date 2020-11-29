@@ -51,11 +51,36 @@ tools:context=".OrderActivity">
         android:ems="15"
         android:entries="@array/homework_priority"/>
 
-    <Spinner
+<!--    <EditText-->
+<!--        android:id="@+id/set_date"-->
+<!--        android:layout_width="313dp"-->
+<!--        android:layout_height="45dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="datetime"-->
+<!--        android:hint="Date" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/set_hour"-->
+<!--        android:layout_width="313dp"-->
+<!--        android:layout_height="45dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="time"-->
+<!--        android:hint="Hour" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/set_minute"-->
+<!--        android:layout_width="313dp"-->
+<!--        android:layout_height="45dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="time"-->
+<!--        android:hint="Minute" />-->
+
+    <Button
         android:id="@+id/reminder"
-        android:layout_width="313dp"
+        android:layout_width="314dp"
         android:layout_height="45dp"
-        android:ems="15" />
+        android:onClick="createReminder"
+        android:text="Set Reminder" />
 
     <Button
         android:id="@+id/add"

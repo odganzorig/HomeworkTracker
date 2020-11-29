@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.homeworktracker.model.Class;
+
 public class AddClassesActivity extends AppCompatActivity {
 
     @Override
@@ -35,8 +37,9 @@ public class AddClassesActivity extends AppCompatActivity {
     }
 
     public void onAddClass(View view) {
+        Class sampleClass = new Class();
         EditText name = findViewById(R.id.name);
-        String className = name.getText().toString();
+        sampleClass.class_name = name.getText().toString();
 
         DatePicker startDate = (DatePicker) findViewById(R.id.startDate);
         int startDay = startDate.getDayOfMonth(); // get the selected day of the month
@@ -45,6 +48,7 @@ public class AddClassesActivity extends AppCompatActivity {
         String startMonth1 = String.valueOf(startMonth);
         int startYear = startDate.getYear(); // get the selected year
         String startYear1 = String.valueOf(startYear);
+        sampleClass.start_date = startMonth1 + "/" + startDay1 + "/" + startYear1;
 
         DatePicker endDate = (DatePicker) findViewById(R.id.endDate);
         int endDay = endDate.getDayOfMonth();
@@ -53,12 +57,13 @@ public class AddClassesActivity extends AppCompatActivity {
         String endMonth1 = String.valueOf(endMonth);
         int endYear = endDate.getYear();
         String endYear1 = String.valueOf(endYear);
+        sampleClass.end_date = endMonth1 + "/" + endDay1 + "/" + endYear1;
 
         EditText instructor = findViewById(R.id.instructor);
-        String instructorName = instructor.getText().toString();
+        sampleClass.instructor = instructor.getText().toString();
 
         Spinner classDays = (Spinner) findViewById(R.id.class_days);
-        String daysOfClass = String.valueOf(classDays.getSelectedItem());
+        sampleClass.class_days = String.valueOf(classDays.getSelectedItem());
 
         TimePicker classTime = (TimePicker)findViewById(R.id.classTime);
         String hour1, minute1;
@@ -74,30 +79,16 @@ public class AddClassesActivity extends AppCompatActivity {
             hour1 = String.valueOf(hour);
             minute1 = String.valueOf(minute);
         }
+        sampleClass.class_time = hour1 + ":" + minute1;
 
-        ContentValues classValues = new ContentValues();
-        classValues.put("NAME", className);
-        classValues.put("START_DATE", startMonth1 + "/" + startDay1 + "/" + startYear1);
-        classValues.put("END_DATE", endMonth1 + "/" + endDay1 + "/" + endYear1);
-        classValues.put("INSTRUCTOR_NAME", instructorName);
-        classValues.put("CLASS_DAYS", daysOfClass);
-        classValues.put("CLASS_TIME", hour1 + ":" + minute1);
-
-        SQLiteOpenHelper HomeworkTrackerDatabaseHelper = new HomeworkTrackerDatabaseHelper(this);
-        try {
-            SQLiteDatabase db = HomeworkTrackerDatabaseHelper.getWritableDatabase();
-            if (db.insert("CLASSES", null, classValues) == -1)
-            {
-                Toast.makeText(this, "Write Failure", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                Toast.makeText(this, "Write Success", Toast.LENGTH_SHORT).show();
-            }
-            db.close();
-        } catch (SQLiteException e) {
-            Toast toast = Toast.makeText(this, "Database unavailable", Toast.LENGTH_SHORT);
-            toast.show();
+        HomeworkTrackerDatabaseHelper databaseHelper = HomeworkTrackerDatabaseHelper.getInstance(this);
+        if(databaseHelper.addClass(sampleClass) == -1)
+        {
+            Toast.makeText(this, "Write Failure", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Write Success", Toast.LENGTH_SHORT).show();
         }
     }
 }
