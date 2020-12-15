@@ -57,6 +57,11 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE COMPLETED_HOMEWORK ("
                 + "HOMEWORK_ID INTEGER , "
                 + "COMPLETION_DATE INTEGER);");
+
+        db.execSQL("CREATE TABLE REMINDERS ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "HOMEWORK_ID INTEGER , "
+                + "TYPE TEXT);");
     }
 
     @Override

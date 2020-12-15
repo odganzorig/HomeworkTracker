@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
-
+import java.text.SimpleDateFormat;
 import android.provider.AlarmClock;
 import android.provider.CalendarContract;
+import android.util.Log;
 import android.view.View;
+import java.util.Date;
+import java.sql.Time;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.EditText;
@@ -21,15 +24,20 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.database.Cursor;
+import android.content.ContentUris;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import java.text.ParseException;
 import java.util.Calendar;
-
+import android.net.Uri;
+import android.content.ContentResolver;
 import com.example.homeworktracker.model.Class;
 import com.example.homeworktracker.model.Homework;
 
 
 public class OrderActivity extends AppCompatActivity {
+
+    private static final String TAG = "MyActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,20 +92,20 @@ public class OrderActivity extends AppCompatActivity {
         sampleHomework.due_date = startMonth1 + "/" + startDay1 + "/" + startYear1;
 
         TimePicker dueTime = (TimePicker)findViewById(R.id.dueTime);
-        String hour1, minute1;
+        String dueHour, dueMinute;
         if (Build.VERSION.SDK_INT >= 23 ){
             int hour = dueTime.getHour();
             int minute = dueTime.getMinute();
-            hour1 = String.valueOf(hour);
-            minute1 = String.valueOf(minute);
+            dueHour = String.valueOf(hour);
+            dueMinute = String.valueOf(minute);
         }
         else{
             int hour = dueTime.getCurrentHour();
             int minute = dueTime.getCurrentMinute();
-            hour1 = String.valueOf(hour);
-            minute1 = String.valueOf(minute);
+            dueHour = String.valueOf(hour);
+            dueMinute = String.valueOf(minute);
         }
-        sampleHomework.due_time = hour1 + ":" + minute1;
+        sampleHomework.due_time = dueHour + ":" + dueMinute;
 
         Spinner priority = (Spinner) findViewById(R.id.priority);
         sampleHomework.priority = String.valueOf(priority.getSelectedItem());
@@ -107,37 +115,84 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     public void createReminder (View view) {
-//        Intent intent = new Intent (this, AddReminderActivity.class);
-//        startActivity(intent);
-
-//        EditText setDate = (EditText) findViewById(R.id.set_date);
-//        EditText setHour = (EditText) findViewById(R.id.set_hour);
-//        EditText setMinute = (EditText) findViewById(R.id.set_minute);
-//        int date = Integer.parseInt(setDate.getText().toString());
-//        int hour = Integer.parseInt(setHour.getText().toString());
-//        int minute = Integer.parseInt(setMinute.getText().toString());
 
         EditText description = findViewById(R.id.description);
         Spinner relatedClass = (Spinner) findViewById(R.id.related_class);
-        String reminderDescription = description.getText().toString() + ", " + relatedClass.getSelectedItem() ;
+        String reminderTitle = description.getText().toString() + ", " + relatedClass.getSelectedItem();
 
-//        Intent reminderIntent = new Intent (AlarmClock.ACTION_SET_ALARM);
-//        reminderIntent.putExtra(AlarmClock.EXTRA_DAYS, date);
-//        reminderIntent.putExtra(AlarmClock.EXTRA_HOUR, hour);
-//        reminderIntent.putExtra(AlarmClock.EXTRA_MINUTES, minute);
-//        reminderIntent.putExtra(AlarmClock.EXTRA_MESSAGE, reminderDescription);
-//        if(hour <= 24 && minute <= 60){
-//            startActivity(reminderIntent);
-//        }
-        Intent reminderIntent = new Intent (Intent.ACTION_INSERT);
-        reminderIntent.setType("vnd.android.cursor.item/event");
-        //reminderIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, date + hour + minute);
-        reminderIntent.putExtra(CalendarContract.Events.HAS_ALARM, true);
-        reminderIntent.putExtra(CalendarContract.Events.TITLE, reminderDescription);
-        reminderIntent.putExtra(CalendarContract.Reminders.EVENT_ID, CalendarContract.Events._ID);
-        reminderIntent.putExtra(CalendarContract.Events.ALLOWED_REMINDERS, "METHOD_DEFAULT");
+        DatePicker startDate = (DatePicker) findViewById(R.id.reminderDate);
+        int startDay = startDate.getDayOfMonth();
+        int startMonth = startDate.getMonth();
+        int startYear = startDate.getYear();
+
+        DatePicker dueDate = (DatePicker) findViewById(R.id.dueDate);
+        int dueDay = dueDate.getDayOfMonth();
+        int dueMonth = dueDate.getMonth();
+        int dueYear = dueDate.getYear();
+
+        TimePicker reminderStartTime = (TimePicker)findViewById(R.id.reminderTime);
+        int startHour, startMinute;
+        if (Build.VERSION.SDK_INT >= 23 ){
+            startHour = reminderStartTime.getHour();
+            startMinute = reminderStartTime.getMinute();
+        }
+        else{
+            startHour = reminderStartTime.getCurrentHour();
+            startMinute = reminderStartTime.getCurrentMinute();
+        }
+
+        TimePicker dueTime = (TimePicker)findViewById(R.id.dueTime);
+        int dueHour, dueMinute;
+        if (Build.VERSION.SDK_INT >= 23 ){
+            dueHour = dueTime.getHour();
+            dueMinute = dueTime.getMinute();
+        }
+        else{
+            dueHour = dueTime.getCurrentHour();
+            dueMinute = dueTime.getCurrentMinute();
+        }
+
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.set(startYear, startMonth, startDay, startHour, startMinute);
+        Calendar endTime = Calendar.getInstance();
+        endTime.set(dueYear, dueMonth, dueDay, dueHour, dueMinute);
+
+        Intent reminderIntent = new Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI);
+        reminderIntent.putExtra(CalendarContract.Events.TITLE, reminderTitle);
+        reminderIntent.putExtra(CalendarContract.Events.ALL_DAY, false);
+        reminderIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis());
+        reminderIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
+        reminderIntent.putExtra(CalendarContract.Events.HAS_ALARM, 1);
+        reminderIntent.putExtra(CalendarContract.Reminders.MINUTES, 0);
         reminderIntent.putExtra(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-
         startActivity(reminderIntent);
+
+//
+//        Calendar cal = Calendar.getInstance();
+//        try{
+//            Date reminderStartDate1 = new SimpleDateFormat("MM/dd/yyyy").parse(reminderStartDate.getText().toString());
+//            Date reminderEndDate1 = new SimpleDateFormat("MM/dd/yyyy").parse(reminderEndDate.getText().toString());
+//            cal.setTime(reminderStartDate1);
+//            cal.set(Calendar.HOUR_OF_DAY, startHour);
+//            cal.set(Calendar.MINUTE, startMinute);
+//            long startCalTime = cal.getTimeInMillis();
+//            cal.setTime(reminderEndDate1);
+//            cal.set(Calendar.HOUR_OF_DAY, endHour);
+//            cal.set(Calendar.MINUTE, endMinute);
+//            long endCalTime = cal.getTimeInMillis();
+//            Intent reminderIntent = new Intent(Intent.ACTION_INSERT)
+//                    .setData(CalendarContract.Events.CONTENT_URI);
+//            reminderIntent.putExtra(CalendarContract.Events.TITLE, reminderTitle);
+//            reminderIntent.putExtra(CalendarContract.Events.HAS_ALARM, 1);
+//            reminderIntent.putExtra(CalendarContract.Events.RDATE, reminderStartDate1);
+//            reminderIntent.putExtra(CalendarContract.Events.LAST_DATE, reminderEndDate1);
+//            reminderIntent.putExtra(CalendarContract.Events.DTSTART, reminderStartDate1);
+//            reminderIntent.putExtra(CalendarContract.Events.DTEND, reminderEndDate1);
+//            startActivity(reminderIntent);
+//        }catch (ParseException e){
+//            e.printStackTrace();
+//        }
+
     }
 }

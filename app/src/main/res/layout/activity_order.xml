@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+<LinearLayout
+    android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
 tools:context=".OrderActivity">
@@ -9,6 +14,7 @@ tools:context=".OrderActivity">
 <include
     layout="@layout/toolbar_main"
     android:id="@+id/toolbar" />
+
 
     <EditText
         android:id="@+id/description"
@@ -31,6 +37,11 @@ tools:context=".OrderActivity">
         android:ems="15"
         android:entries="@array/homework_type"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select due date" />
+
     <DatePicker
         android:id="@+id/dueDate"
         android:layout_width="313dp"
@@ -38,11 +49,21 @@ tools:context=".OrderActivity">
         android:calendarViewShown="false"
         android:datePickerMode="spinner" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select due time" />
+
     <TimePicker
         android:id="@+id/dueTime"
         android:layout_width="313dp"
         android:layout_height="126dp"
         android:timePickerMode="spinner" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select priority" />
 
     <Spinner
         android:id="@+id/priority"
@@ -51,29 +72,23 @@ tools:context=".OrderActivity">
         android:ems="15"
         android:entries="@array/homework_priority"/>
 
-<!--    <EditText-->
-<!--        android:id="@+id/set_date"-->
-<!--        android:layout_width="313dp"-->
-<!--        android:layout_height="45dp"-->
-<!--        android:ems="10"-->
-<!--        android:inputType="datetime"-->
-<!--        android:hint="Date" />-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set date and time for reminder" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/set_hour"-->
-<!--        android:layout_width="313dp"-->
-<!--        android:layout_height="45dp"-->
-<!--        android:ems="10"-->
-<!--        android:inputType="time"-->
-<!--        android:hint="Hour" />-->
+    <DatePicker
+        android:id="@+id/reminderDate"
+        android:layout_width="313dp"
+        android:layout_height="114dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/set_minute"-->
-<!--        android:layout_width="313dp"-->
-<!--        android:layout_height="45dp"-->
-<!--        android:ems="10"-->
-<!--        android:inputType="time"-->
-<!--        android:hint="Minute" />-->
+    <TimePicker
+        android:id="@+id/reminderTime"
+        android:layout_width="313dp"
+        android:layout_height="126dp"
+        android:timePickerMode="spinner"/>
 
     <Button
         android:id="@+id/reminder"
@@ -91,3 +106,4 @@ tools:context=".OrderActivity">
         android:text="@string/add" />
 
 </LinearLayout>
+</ScrollView>

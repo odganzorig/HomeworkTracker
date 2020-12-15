@@ -6,4 +6,7 @@
     android:orientation="vertical"
     tools:context=".AddReminderActivity">
 
+    <include
+        layout="@layout/toolbar_main"
+        android:id="@+id/toolbar" />
 </LinearLayout>
