@@ -114,7 +114,6 @@ public class ClassesFragment extends Fragment {
         listClasses.setOnItemClickListener(itemClickListener);
 
         return rootView;
-
     }
 
     @Override

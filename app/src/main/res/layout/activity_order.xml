@@ -40,7 +40,7 @@ tools:context=".OrderActivity">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select due date" />
+        android:text="Select due date and time" />
 
     <DatePicker
         android:id="@+id/dueDate"
@@ -48,11 +48,6 @@ tools:context=".OrderActivity">
         android:layout_height="114dp"
         android:calendarViewShown="false"
         android:datePickerMode="spinner" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select due time" />
 
     <TimePicker
         android:id="@+id/dueTime"
@@ -89,13 +84,6 @@ tools:context=".OrderActivity">
         android:layout_width="313dp"
         android:layout_height="126dp"
         android:timePickerMode="spinner"/>
-
-    <Button
-        android:id="@+id/reminder"
-        android:layout_width="314dp"
-        android:layout_height="45dp"
-        android:onClick="createReminder"
-        android:text="Set Reminder" />
 
     <Button
         android:id="@+id/add"

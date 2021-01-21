@@ -32,8 +32,8 @@ public class AddClassesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        TimePicker classTime = (TimePicker)findViewById(R.id.classTime);
-        classTime.setIs24HourView(true);
+//        TimePicker classTime = (TimePicker)findViewById(R.id.classTime);
+//        classTime.setIs24HourView(true);
     }
 
     public void onAddClass(View view) {
@@ -84,11 +84,11 @@ public class AddClassesActivity extends AppCompatActivity {
         HomeworkTrackerDatabaseHelper databaseHelper = HomeworkTrackerDatabaseHelper.getInstance(this);
         if(databaseHelper.addClass(sampleClass) == -1)
         {
-            Toast.makeText(this, "Write Failure", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Add Failure!", Toast.LENGTH_SHORT).show();
         }
         else
         {
-            Toast.makeText(this, "Write Success", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Class Added!", Toast.LENGTH_SHORT).show();
         }
     }
 }

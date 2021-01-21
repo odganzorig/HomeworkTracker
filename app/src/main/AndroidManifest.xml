@@ -5,8 +5,6 @@
 
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -15,30 +13,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddReminderActivity"></activity>
+
+        <activity
+            android:name=".HomeworkActivity"
+            android:parentActivityName=".HomeworkFragment">
+        </activity>
 
         <activity
             android:name=".ClassActivity"
             android:parentActivityName=".ClassesFragment">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".AddClassesActivity"
             android:label="@string/add_classes"
             android:parentActivityName=".ClassesFragment">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeworkFragment" />
         </activity>
         <activity
             android:name=".OrderActivity"
             android:label="@string/add_homework"
             android:parentActivityName=".HomeworkFragment">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeworkFragment" />
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>

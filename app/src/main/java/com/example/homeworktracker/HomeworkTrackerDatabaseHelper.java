@@ -4,11 +4,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.widget.Toast;
 import java.util.List;
 import java.util.ArrayList;
 import android.database.Cursor;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.net.Uri;
 
 import com.example.homeworktracker.model.Class;
 import com.example.homeworktracker.model.Homework;
@@ -74,8 +78,9 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Insert a post into the database
-    public void addHomework(Homework homework) {
+    public long addHomework(Homework homework) {
         SQLiteDatabase db = getWritableDatabase();
+        long hwId = -1;
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
@@ -85,13 +90,15 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
             values.put("DUE_DATE", homework.due_date);
             values.put("DUE_TIME", homework.due_time);
             values.put("PRIORITY", homework.priority);
-            db.insertOrThrow("HOMEWORK", null, values);
+            values.put("REMINDER", homework.reminder_date_time);
+            hwId = db.insertOrThrow("HOMEWORK", null, values);
             db.setTransactionSuccessful();
         }catch (Exception e) {
-            Log.d(TAG, "Error while trying to add homework to database");
+            Log.d(TAG, "Error while trying to add the homework");
         }finally {
             db.endTransaction();
         }
+        return hwId;
     }
 
     public long addClass(Class class1) {
@@ -173,5 +180,20 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
         return classId;
+    }
+
+    public long deleteHomework(Homework homework) {
+        SQLiteDatabase db = getWritableDatabase();
+        long hwId = 0;
+        db.beginTransaction();
+        try {
+            hwId = db.delete("HOMEWORK", "DESCRIPTION = ?", new String[] {homework.description});
+            db.setTransactionSuccessful();
+        }catch (Exception e) {
+            Log.d(TAG, "Error while trying to delete the homework");
+        }finally {
+            db.endTransaction();
+        }
+        return hwId;
     }
 }

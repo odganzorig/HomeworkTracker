@@ -2,10 +2,15 @@ package com.example.homeworktracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.icu.util.TimeZone;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
+import com.google.android.material.snackbar.Snackbar;
 import java.text.SimpleDateFormat;
 import android.provider.AlarmClock;
 import android.provider.CalendarContract;
@@ -20,6 +25,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
@@ -30,6 +36,7 @@ import android.app.PendingIntent;
 import java.text.ParseException;
 import java.util.Calendar;
 import android.net.Uri;
+import android.content.Context;
 import android.content.ContentResolver;
 import com.example.homeworktracker.model.Class;
 import com.example.homeworktracker.model.Homework;
@@ -38,6 +45,8 @@ import com.example.homeworktracker.model.Homework;
 public class OrderActivity extends AppCompatActivity {
 
     private static final String TAG = "MyActivity";
+    private static final int PERMISSION_REQUEST_CODE = 123;
+    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,38 +93,66 @@ public class OrderActivity extends AppCompatActivity {
 
         DatePicker dueDate = (DatePicker) findViewById(R.id.dueDate);
         int startDay = dueDate.getDayOfMonth(); // get the selected day of the month
-        String startDay1 = String.valueOf(startDay);
         int startMonth = dueDate.getMonth(); // get the selected month
-        String startMonth1 = String.valueOf(startMonth);
         int startYear = dueDate.getYear(); // get the selected year
-        String startYear1 = String.valueOf(startYear);
-        sampleHomework.due_date = startMonth1 + "/" + startDay1 + "/" + startYear1;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(startYear, startMonth, startDay);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dueDate1 = sdf.format(calendar.getTime());
+        sampleHomework.due_date = dueDate1;
 
         TimePicker dueTime = (TimePicker)findViewById(R.id.dueTime);
-        String dueHour, dueMinute;
-        if (Build.VERSION.SDK_INT >= 23 ){
-            int hour = dueTime.getHour();
-            int minute = dueTime.getMinute();
-            dueHour = String.valueOf(hour);
-            dueMinute = String.valueOf(minute);
-        }
-        else{
-            int hour = dueTime.getCurrentHour();
-            int minute = dueTime.getCurrentMinute();
-            dueHour = String.valueOf(hour);
-            dueMinute = String.valueOf(minute);
-        }
-        sampleHomework.due_time = dueHour + ":" + dueMinute;
+        int hour = dueTime.getHour();
+        int minute = dueTime.getMinute();
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.set(Calendar.HOUR_OF_DAY, hour);
+        calendar2.set(Calendar.MINUTE, minute);
+        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+        String dueTime1 = sdf2.format(calendar2.getTime());
+        sampleHomework.due_time = dueTime1;
 
         Spinner priority = (Spinner) findViewById(R.id.priority);
         sampleHomework.priority = String.valueOf(priority.getSelectedItem());
 
+        DatePicker reminderDate = (DatePicker) findViewById(R.id.reminderDate);
+        int reminderDay = reminderDate.getDayOfMonth(); // get the selected day of the month
+        String reminderDay1 = String.valueOf(reminderDay);
+        int reminderMonth = reminderDate.getMonth(); // get the selected month
+        String reminderMonth1 = String.valueOf(reminderMonth);
+        int reminderYear = reminderDate.getYear(); // get the selected year
+        String reminderYear1 = String.valueOf(reminderYear);
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.set(reminderYear, reminderMonth, reminderDay);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        String reminderDate1 = sdf1.format(calendar1.getTime());
+
+        TimePicker reminderTime = (TimePicker)findViewById(R.id.reminderTime);
+        int rHour = reminderTime.getHour();
+        int rMinute = reminderTime.getMinute();
+        Calendar calendar3 = Calendar.getInstance();
+        calendar3.set(Calendar.HOUR_OF_DAY, rHour);
+        calendar3.set(Calendar.MINUTE, rMinute);
+        SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm");
+        String reminderTime1 = sdf3.format(calendar3.getTime());
+        sampleHomework.reminder_date_time = reminderTime1;
+
+        boolean result = checkPermission();
+        if (result) {
+            createReminder();
+        }
+
         HomeworkTrackerDatabaseHelper databaseHelper = HomeworkTrackerDatabaseHelper.getInstance(this);
-        databaseHelper.addHomework(sampleHomework);
+        if(databaseHelper.addHomework(sampleHomework) == -1)
+        {
+            Toast.makeText(this, "Add Failure!", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Homework Added!", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public void createReminder (View view) {
-
+    private void createReminder() {
         EditText description = findViewById(R.id.description);
         Spinner relatedClass = (Spinner) findViewById(R.id.related_class);
         String reminderTitle = description.getText().toString() + ", " + relatedClass.getSelectedItem();
@@ -130,69 +167,115 @@ public class OrderActivity extends AppCompatActivity {
         int dueMonth = dueDate.getMonth();
         int dueYear = dueDate.getYear();
 
-        TimePicker reminderStartTime = (TimePicker)findViewById(R.id.reminderTime);
+        TimePicker reminderStartTime = (TimePicker) findViewById(R.id.reminderTime);
         int startHour, startMinute;
-        if (Build.VERSION.SDK_INT >= 23 ){
-            startHour = reminderStartTime.getHour();
-            startMinute = reminderStartTime.getMinute();
-        }
-        else{
-            startHour = reminderStartTime.getCurrentHour();
-            startMinute = reminderStartTime.getCurrentMinute();
-        }
+        startHour = reminderStartTime.getHour();
+        startMinute = reminderStartTime.getMinute();
 
-        TimePicker dueTime = (TimePicker)findViewById(R.id.dueTime);
+        TimePicker dueTime = (TimePicker) findViewById(R.id.dueTime);
         int dueHour, dueMinute;
-        if (Build.VERSION.SDK_INT >= 23 ){
-            dueHour = dueTime.getHour();
-            dueMinute = dueTime.getMinute();
-        }
-        else{
-            dueHour = dueTime.getCurrentHour();
-            dueMinute = dueTime.getCurrentMinute();
-        }
+        dueHour = dueTime.getHour();
+        dueMinute = dueTime.getMinute();
 
         Calendar beginTime = Calendar.getInstance();
         beginTime.set(startYear, startMonth, startDay, startHour, startMinute);
         Calendar endTime = Calendar.getInstance();
         endTime.set(dueYear, dueMonth, dueDay, dueHour, dueMinute);
 
-        Intent reminderIntent = new Intent(Intent.ACTION_INSERT)
-                    .setData(CalendarContract.Events.CONTENT_URI);
-        reminderIntent.putExtra(CalendarContract.Events.TITLE, reminderTitle);
-        reminderIntent.putExtra(CalendarContract.Events.ALL_DAY, false);
-        reminderIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis());
-        reminderIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
-        reminderIntent.putExtra(CalendarContract.Events.HAS_ALARM, 1);
-        reminderIntent.putExtra(CalendarContract.Reminders.MINUTES, 0);
-        reminderIntent.putExtra(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-        startActivity(reminderIntent);
+        ContentResolver cr = getContentResolver();
+        ContentValues values = new ContentValues();
+        String calendarId = getGmailCalendarId(this);
+        values.put(CalendarContract.Events.DTSTART, beginTime.getTimeInMillis());
+        values.put(CalendarContract.Events.DTEND, endTime.getTimeInMillis());
+        values.put(CalendarContract.Events.TITLE, reminderTitle);
+        values.put(CalendarContract.Events.CALENDAR_ID, calendarId);
+        values.put(CalendarContract.Events.HAS_ALARM, 1);
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, Calendar.getInstance()
+                .getTimeZone().getID());
+        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+        long eventID = Long.parseLong(uri.getLastPathSegment());
+        setReminder(cr, eventID, 0);
+        Toast.makeText(getApplicationContext(), "Reminder Created", Toast.LENGTH_SHORT).show();
+        syncCalendar(this, calendarId);
+    }
 
-//
-//        Calendar cal = Calendar.getInstance();
-//        try{
-//            Date reminderStartDate1 = new SimpleDateFormat("MM/dd/yyyy").parse(reminderStartDate.getText().toString());
-//            Date reminderEndDate1 = new SimpleDateFormat("MM/dd/yyyy").parse(reminderEndDate.getText().toString());
-//            cal.setTime(reminderStartDate1);
-//            cal.set(Calendar.HOUR_OF_DAY, startHour);
-//            cal.set(Calendar.MINUTE, startMinute);
-//            long startCalTime = cal.getTimeInMillis();
-//            cal.setTime(reminderEndDate1);
-//            cal.set(Calendar.HOUR_OF_DAY, endHour);
-//            cal.set(Calendar.MINUTE, endMinute);
-//            long endCalTime = cal.getTimeInMillis();
-//            Intent reminderIntent = new Intent(Intent.ACTION_INSERT)
-//                    .setData(CalendarContract.Events.CONTENT_URI);
-//            reminderIntent.putExtra(CalendarContract.Events.TITLE, reminderTitle);
-//            reminderIntent.putExtra(CalendarContract.Events.HAS_ALARM, 1);
-//            reminderIntent.putExtra(CalendarContract.Events.RDATE, reminderStartDate1);
-//            reminderIntent.putExtra(CalendarContract.Events.LAST_DATE, reminderEndDate1);
-//            reminderIntent.putExtra(CalendarContract.Events.DTSTART, reminderStartDate1);
-//            reminderIntent.putExtra(CalendarContract.Events.DTEND, reminderEndDate1);
-//            startActivity(reminderIntent);
-//        }catch (ParseException e){
-//            e.printStackTrace();
-//        }
+    public void setReminder(ContentResolver cr, long eventID, int timeBefore) {
+        try {
+            ContentValues values = new ContentValues();
+            values.put(CalendarContract.Reminders.MINUTES, timeBefore);
+            values.put(CalendarContract.Reminders.EVENT_ID, eventID);
+            values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+            Uri uri = cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public String getGmailCalendarId(Context c) {
+        String calenderId = "";
+        String[] projection = new String[]{"_id", "calendar_displayName"};
+        Uri calendars = Uri.parse("content://com.android.calendar/calendars");
+        ContentResolver contentResolver = c.getContentResolver();
+        Cursor managedCursor = contentResolver.query(calendars,
+                projection, null, null, null);
+        if (managedCursor != null && managedCursor.moveToFirst()) {
+            String calName;
+            String calID;
+            int nameCol = managedCursor.getColumnIndex(projection[1]);
+            int idCol = managedCursor.getColumnIndex(projection[0]);
+            do {
+                calName = managedCursor.getString(nameCol);
+                calID = managedCursor.getString(idCol);
+                if (calName.contains("@gmail")) {
+                    calenderId = calID;
+                    break;
+                }
+            } while (managedCursor.moveToNext());
+            managedCursor.close();
+            return calenderId;
+        }
+        return calenderId;
+    }
+
+    public static void syncCalendar(Context context, String calendarId) {
+        try {
+            ContentResolver cr = context.getContentResolver();
+            ContentValues values = new ContentValues();
+            values.put(CalendarContract.Calendars.SYNC_EVENTS, 1);
+            values.put(CalendarContract.Calendars.VISIBLE, 1);
+
+            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Calendars.CONTENT_URI, Long.parseLong(calendarId));
+            cr.update(updateUri, values, null, null);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkPermission() {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            //Toast.makeText(getApplicationContext(), "Permission already granted.", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Permission already granted.");
+        }
+        else {
+            requestPermissions(new String[]{Manifest.permission.WRITE_CALENDAR, Manifest.permission.READ_CALENDAR}, PERMISSION_REQUEST_CODE);}
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    createReminder();
+                }  else {
+                    Toast.makeText(getApplicationContext(), " Need a Permission.", Toast.LENGTH_SHORT).show();
+                }
+                return;
+        }
     }
 }

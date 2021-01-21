@@ -28,7 +28,7 @@ public class ClassActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //Get the drink from the intent
+        //Get the class from the intent
         int classId = (Integer)getIntent().getExtras().get(EXTRA_CLASSID);
 
         //Create a cursor
@@ -42,7 +42,7 @@ public class ClassActivity extends AppCompatActivity {
                     null, null, null);
             //Move to the first record in the Cursor
             if (cursor.moveToFirst()) {
-                //Get the drink details from the cursor
+                //Get the class details from the cursor
                 String nameText = cursor.getString(0);
                 String start_dateText = cursor.getString(1);
                 String end_dateText = cursor.getString(2);
@@ -88,7 +88,6 @@ public class ClassActivity extends AppCompatActivity {
         sampleClass.class_name = name.getText().toString();
 
         HomeworkTrackerDatabaseHelper databaseHelper = HomeworkTrackerDatabaseHelper.getInstance(this);
-        //databaseHelper.deleteClass(sampleClass);
         if(databaseHelper.deleteClass(sampleClass) == 0)
         {
             Toast.makeText(this, "Delete Failure", Toast.LENGTH_SHORT).show();
