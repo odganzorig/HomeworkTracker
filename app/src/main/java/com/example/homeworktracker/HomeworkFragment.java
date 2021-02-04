@@ -168,9 +168,9 @@ public class HomeworkFragment extends Fragment {
                                             View itemView,
                                             int position,
                                             long id) {
-                        //Pass the class the user clicks on to HomeworkActivity
-                        Intent intent = new Intent(getActivity(), HomeworkActivity.class);
-                        intent.putExtra(HomeworkActivity.EXTRA_HOMEWORKID, (int) id);
+                        //Pass the class the user clicks on to CompletedActivity
+                        Intent intent = new Intent(getActivity(), CompletedActivity.class);
+                        intent.putExtra(CompletedActivity.EXTRA_COMPLETED_HOMEWORKID, (int) id);
                         startActivity(intent);
                     }
                 };

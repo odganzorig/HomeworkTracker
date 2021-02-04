@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.content.ContentUris;
 
-import com.example.homeworktracker.model.Class;
 import com.example.homeworktracker.model.Homework;
 
 public class HomeworkActivity extends AppCompatActivity {
@@ -117,6 +116,7 @@ public class HomeworkActivity extends AppCompatActivity {
         {
             Toast.makeText(this, "Homework Added!", Toast.LENGTH_SHORT).show();
         }
+        onDeleteHomework(view);
 
     }
 

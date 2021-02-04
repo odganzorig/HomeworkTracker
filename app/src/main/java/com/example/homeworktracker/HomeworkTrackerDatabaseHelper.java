@@ -230,4 +230,19 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         }
         return hwId;
     }
+
+    public long deleteCompletedHomework(Homework homework) {
+        SQLiteDatabase db = getWritableDatabase();
+        long cHwId = 0;
+        db.beginTransaction();
+        try {
+            cHwId = db.delete("HOMEWORK_COMPLETED", "DESCRIPTION = ?", new String[] {homework.description});
+            db.setTransactionSuccessful();
+        }catch (Exception e) {
+            Log.d(TAG, "Error while trying to delete the completed homework");
+        }finally {
+            db.endTransaction();
+        }
+        return cHwId;
+    }
 }
