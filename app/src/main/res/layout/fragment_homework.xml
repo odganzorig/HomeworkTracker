@@ -23,12 +23,6 @@
             android:gravity="center"
             android:text="Completed" />
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:padding="3dip"
-            android:gravity="center"
-            android:text="Late" />
     </TableRow>
     <TableRow
         android:layout_width="fill_parent"
@@ -50,13 +44,6 @@
             android:clickable="true"
             android:focusable="true"/>
 
-        <ListView
-            android:id="@+id/list_homework_late"
-            android:layout_height="wrap_content"
-            android:layout_width="0dip"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"/>
     </TableRow>
 
 </TableLayout>

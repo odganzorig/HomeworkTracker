@@ -12,10 +12,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.ContentUris;
+
+import com.example.homeworktracker.model.Class;
 import com.example.homeworktracker.model.Homework;
 
 public class HomeworkActivity extends AppCompatActivity {
@@ -89,12 +95,38 @@ public class HomeworkActivity extends AppCompatActivity {
         }
     }
 
+    public void onCompletedClicked(View view) {
+        Homework sampleHomework = new Homework();
+        TextView description = findViewById(R.id.hw_description);
+        sampleHomework.description = description.getText().toString();
+        TextView related_class = (TextView) findViewById(R.id.related_class_name);
+        sampleHomework.class_name = related_class.getText().toString();
+        TextView type = (TextView)findViewById(R.id.hw_type);
+        sampleHomework.type = type.getText().toString();
+        TextView due_date = (TextView)findViewById(R.id.hw_due_date);
+        sampleHomework.due_date = due_date.getText().toString();
+        TextView due_time = (TextView)findViewById(R.id.hw_due_time);
+        sampleHomework.due_time = due_time.getText().toString();
+        //add the homework to Completed_Homework table in database
+        HomeworkTrackerDatabaseHelper databaseHelper = HomeworkTrackerDatabaseHelper.getInstance(this);
+        if(databaseHelper.addCompletedHomework(sampleHomework) == -1)
+        {
+            Toast.makeText(this, "Add Failure!", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Homework Added!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     public void onDeleteHomework(View view) {
         Homework sampleHomework = new Homework();
         TextView description = findViewById(R.id.hw_description);
         TextView related_class = (TextView) findViewById(R.id.related_class_name);
         String descriptionFull = description.getText().toString() + ", " + related_class.getText().toString();
         sampleHomework.description = description.getText().toString();
+        //deleting the event reminder from calendar
         try {
             Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
             Cursor cursors = getContentResolver().query(CALENDAR_URI, null, null, null, null);
@@ -114,7 +146,7 @@ public class HomeworkActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, "Error deleting!", Toast.LENGTH_SHORT);
             toast.show();
         }
-
+        //deleting the homework from database
         HomeworkTrackerDatabaseHelper databaseHelper = HomeworkTrackerDatabaseHelper.getInstance(this);
         if (databaseHelper.deleteHomework(sampleHomework) == 0) {
             Toast.makeText(this, "Delete Failure", Toast.LENGTH_SHORT).show();

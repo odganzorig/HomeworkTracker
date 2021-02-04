@@ -20,7 +20,7 @@ import com.example.homeworktracker.model.Homework;
 class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "homeworkTracker";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     private static HomeworkTrackerDatabaseHelper sInstance;
     private static final String TAG = "MyActivity";
 
@@ -39,45 +39,57 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE HOMEWORK ("
-                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "DESCRIPTION TEXT, "
-                + "CLASS_NAME TEXT, "
-                + "TYPE TEXT, "
-                + "DUE_DATE TEXT, "
-                + "DUE_TIME TEXT, "
-                + "PRIORITY TEXT, "
-                + "REMINDER TEXT);");
-
-        db.execSQL("CREATE TABLE CLASSES ("
-                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "NAME TEXT, "
-                + "START_DATE TEXT, "
-                + "END_DATE TEXT, "
-                + "INSTRUCTOR_NAME TEXT, "
-                + "CLASS_DAYS TEXT, "
-                + "CLASS_TIME TEXT);");
-
-        db.execSQL("CREATE TABLE COMPLETED_HOMEWORK ("
-                + "HOMEWORK_ID INTEGER , "
-                + "COMPLETION_DATE INTEGER);");
-
-        db.execSQL("CREATE TABLE REMINDERS ("
-                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "HOMEWORK_ID INTEGER , "
-                + "TYPE TEXT);");
+        updateMyDatabase(db, 0, DB_VERSION);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion != newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + "HOMEWORK");
-            db.execSQL("DROP TABLE IF EXISTS " + "CLASSES");
-            onCreate(db);
+        updateMyDatabase(db, oldVersion, newVersion);
+    }
+
+    private void updateMyDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion < 1) {
+            db.execSQL("CREATE TABLE HOMEWORK ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "DESCRIPTION TEXT, "
+                    + "CLASS_NAME TEXT, "
+                    + "TYPE TEXT, "
+                    + "DUE_DATE TEXT, "
+                    + "DUE_TIME TEXT, "
+                    + "PRIORITY TEXT, "
+                    + "REMINDER TEXT);");
+
+            db.execSQL("CREATE TABLE CLASSES ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "NAME TEXT, "
+                    + "START_DATE TEXT, "
+                    + "END_DATE TEXT, "
+                    + "INSTRUCTOR_NAME TEXT, "
+                    + "CLASS_DAYS TEXT, "
+                    + "CLASS_TIME TEXT);");
+
+            db.execSQL("CREATE TABLE COMPLETED_HOMEWORK ("
+                    + "HOMEWORK_ID INTEGER , "
+                    + "COMPLETION_DATE INTEGER);");
+
+            db.execSQL("CREATE TABLE REMINDERS ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "HOMEWORK_ID INTEGER , "
+                    + "TYPE TEXT);");
+        }
+        if (oldVersion < 2) {
+            db.execSQL("DROP TABLE COMPLETED_HOMEWORK;");
+            db.execSQL("CREATE TABLE HOMEWORK_COMPLETED ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "DESCRIPTION TEXT, "
+                    + "CLASS_NAME TEXT, "
+                    + "TYPE TEXT, "
+                    + "DUE_DATE TEXT, "
+                    + "DUE_TIME TEXT);");
         }
     }
 
-    // Insert a post into the database
+    // Insert a homework into the database
     public long addHomework(Homework homework) {
         SQLiteDatabase db = getWritableDatabase();
         long hwId = -1;
@@ -101,6 +113,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         return hwId;
     }
 
+    //insert a class into the database
     public long addClass(Class class1) {
         SQLiteDatabase db = getWritableDatabase();
         long classId = -1;
@@ -121,6 +134,27 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
         return classId;
+    }
+
+    public long addCompletedHomework(Homework homework) {
+        SQLiteDatabase db = getWritableDatabase();
+        long hwId = -1;
+        db.beginTransaction();
+        try {
+            ContentValues values = new ContentValues();
+            values.put("DESCRIPTION", homework.description );
+            values.put("CLASS_NAME", homework.class_name);
+            values.put("TYPE", homework.type);
+            values.put("DUE_DATE", homework.due_date);
+            values.put("DUE_TIME", homework.due_time);
+            hwId = db.insertOrThrow("HOMEWORK_COMPLETED", null, values);
+            db.setTransactionSuccessful();
+        }catch (Exception e) {
+            Log.d(TAG, "Error while trying to add the completed homework");
+        }finally {
+            db.endTransaction();
+        }
+        return hwId;
     }
 
     public void deleteAllClassesAndHomework() {
