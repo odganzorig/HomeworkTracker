@@ -97,7 +97,7 @@ public class OrderActivity extends AppCompatActivity {
         int startYear = dueDate.getYear(); // get the selected year
         Calendar calendar = Calendar.getInstance();
         calendar.set(startYear, startMonth, startDay);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
         String dueDate1 = sdf.format(calendar.getTime());
         sampleHomework.due_date = dueDate1;
 
@@ -123,7 +123,7 @@ public class OrderActivity extends AppCompatActivity {
         String reminderYear1 = String.valueOf(reminderYear);
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(reminderYear, reminderMonth, reminderDay);
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-M-d");
         String reminderDate1 = sdf1.format(calendar1.getTime());
 
         TimePicker reminderTime = (TimePicker)findViewById(R.id.reminderTime);

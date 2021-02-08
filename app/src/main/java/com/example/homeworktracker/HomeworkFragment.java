@@ -108,8 +108,8 @@ public class HomeworkFragment extends Fragment {
                 String due_dateText = cursor.getString(4);
                 String due_timeText = cursor.getString(5);
                 Date currentDate = new Date();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d HH:mm");
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-d HH:mm");
                 Date due_date = sdf.parse(due_dateText + " " + due_timeText);
                 Date current_date = sdf.parse(formatter.format(currentDate));
                 View view = inflater.inflate(android.R.layout.simple_list_item_1, container, false);

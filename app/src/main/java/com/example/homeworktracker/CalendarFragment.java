@@ -66,15 +66,68 @@ public class CalendarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
         CalendarView calendarView=(CalendarView)rootView.findViewById(R.id.calendarView);
         calendarView.setOnDateChangeListener(new OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
+                month = month + 1;
                 String curDate = String.valueOf(year + "-" + month + "-" + dayOfMonth);
-                Toast toast1 = Toast.makeText(getActivity(), curDate, Toast.LENGTH_SHORT);
-                toast1.show();
+                SQLiteOpenHelper HomeworkTrackerDatabaseHelper = new HomeworkTrackerDatabaseHelper(getActivity());
+                try {
+                    SQLiteDatabase db = HomeworkTrackerDatabaseHelper.getReadableDatabase();
+                    Cursor cursor = db.query ("HOMEWORK",
+                            new String[] {"DESCRIPTION", "CLASS_NAME", "TYPE", "DUE_DATE", "DUE_TIME", "PRIORITY", "REMINDER"},
+                            null, null,
+                            null, null, null);
+                    //Move to the first record in the Cursor
+                    while (cursor.moveToNext()) {
+                        String due_dateText = cursor.getString(3);
+                        if(due_dateText.equals(curDate)){
+                            String descriptionText = cursor.getString(0);
+                            String class_nameText = cursor.getString(1);
+                            String typeText = cursor.getString(2);
+                            String due_timeText = cursor.getString(4);
+                            String priorityText = cursor.getString(5);
+                            String reminderText = cursor.getString(6);
+                            TextView description = (TextView)rootView.findViewById(R.id.cal_hw_description);
+                            TextView related_class = (TextView)rootView.findViewById(R.id.cal_related_class_name);
+                            TextView type = (TextView)rootView.findViewById(R.id.cal_hw_type);
+                            TextView due_date = (TextView)rootView.findViewById(R.id.cal_hw_due_date);
+                            TextView due_time = (TextView)rootView.findViewById(R.id.cal_hw_due_time);
+                            TextView priority = (TextView)rootView.findViewById(R.id.cal_hw_priority);
+                            TextView reminder = (TextView)rootView.findViewById(R.id.cal_hw_reminder);
+                            description.setText(descriptionText);
+                            related_class.setText(class_nameText);
+                            type.setText(typeText);
+                            due_date.setText(due_dateText);
+                            due_time.setText(due_timeText);
+                            priority.setText(priorityText);
+                            reminder.setText(reminderText);
+                            break;
+                        }
+                        else{
+                            TextView description = (TextView)rootView.findViewById(R.id.cal_hw_description);
+                            TextView related_class = (TextView)rootView.findViewById(R.id.cal_related_class_name);
+                            TextView type = (TextView)rootView.findViewById(R.id.cal_hw_type);
+                            TextView due_date = (TextView)rootView.findViewById(R.id.cal_hw_due_date);
+                            TextView due_time = (TextView)rootView.findViewById(R.id.cal_hw_due_time);
+                            TextView priority = (TextView)rootView.findViewById(R.id.cal_hw_priority);
+                            TextView reminder = (TextView)rootView.findViewById(R.id.cal_hw_reminder);
+                            description.setText(null);
+                            related_class.setText(null);
+                            type.setText(null);
+                            due_date.setText(null);
+                            due_time.setText(null);
+                            priority.setText(null);
+                            reminder.setText(null);
+                        }
+                    }
+                } catch(SQLiteException e) {
+                    Toast toast = Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
         return rootView;
