@@ -96,7 +96,7 @@ public class TopFragment extends Fragment {
                     }
                 };
         //Assign the listener to the list view
-        listHomework.setOnItemClickListener(itemClickListener);
+        listHomework.setOnItemClickListener(itemClickListener1);
 
         return rootView;
     }

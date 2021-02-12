@@ -12,6 +12,7 @@ import android.widget.CalendarView.OnDateChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,9 @@ public class CalendarFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    final int N = 7; // total number of textviews to add
+
+    TextView[] myTextViews = new TextView[N]; // create an empty array;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -81,47 +85,28 @@ public class CalendarFragment extends Fragment {
                             new String[] {"DESCRIPTION", "CLASS_NAME", "TYPE", "DUE_DATE", "DUE_TIME", "PRIORITY", "REMINDER"},
                             null, null,
                             null, null, null);
+                    View linearLayout = (View)rootView.findViewById(R.id.info);
+                    int i = 0;
                     //Move to the first record in the Cursor
                     while (cursor.moveToNext()) {
                         String due_dateText = cursor.getString(3);
                         if(due_dateText.equals(curDate)){
                             String descriptionText = cursor.getString(0);
                             String class_nameText = cursor.getString(1);
-                            String typeText = cursor.getString(2);
                             String due_timeText = cursor.getString(4);
-                            String priorityText = cursor.getString(5);
-                            String reminderText = cursor.getString(6);
-                            TextView description = (TextView)rootView.findViewById(R.id.cal_hw_description);
-                            TextView related_class = (TextView)rootView.findViewById(R.id.cal_related_class_name);
-                            TextView type = (TextView)rootView.findViewById(R.id.cal_hw_type);
-                            TextView due_date = (TextView)rootView.findViewById(R.id.cal_hw_due_date);
-                            TextView due_time = (TextView)rootView.findViewById(R.id.cal_hw_due_time);
-                            TextView priority = (TextView)rootView.findViewById(R.id.cal_hw_priority);
-                            TextView reminder = (TextView)rootView.findViewById(R.id.cal_hw_reminder);
-                            description.setText(descriptionText);
-                            related_class.setText(class_nameText);
-                            type.setText(typeText);
-                            due_date.setText(due_dateText);
-                            due_time.setText(due_timeText);
-                            priority.setText(priorityText);
-                            reminder.setText(reminderText);
-                            break;
+                            final TextView rowTextView = new TextView(getActivity());
+                            int my_tag = View.generateViewId();
+                            rowTextView.setId(my_tag);
+                            rowTextView.setText(descriptionText + ", " + class_nameText + ", due at: " + due_timeText);
+                            ((LinearLayout) linearLayout).addView(rowTextView);
+                            myTextViews[i] = rowTextView;
+                            i++;
                         }
-                        else{
-                            TextView description = (TextView)rootView.findViewById(R.id.cal_hw_description);
-                            TextView related_class = (TextView)rootView.findViewById(R.id.cal_related_class_name);
-                            TextView type = (TextView)rootView.findViewById(R.id.cal_hw_type);
-                            TextView due_date = (TextView)rootView.findViewById(R.id.cal_hw_due_date);
-                            TextView due_time = (TextView)rootView.findViewById(R.id.cal_hw_due_time);
-                            TextView priority = (TextView)rootView.findViewById(R.id.cal_hw_priority);
-                            TextView reminder = (TextView)rootView.findViewById(R.id.cal_hw_reminder);
-                            description.setText(null);
-                            related_class.setText(null);
-                            type.setText(null);
-                            due_date.setText(null);
-                            due_time.setText(null);
-                            priority.setText(null);
-                            reminder.setText(null);
+                        else {
+                            ((LinearLayout) linearLayout).removeView(myTextViews[i]);
+                            for (int j = 1; j < N; j++){
+                                ((LinearLayout) linearLayout).removeView(myTextViews[j]);
+                            }
                         }
                     }
                 } catch(SQLiteException e) {
@@ -132,54 +117,4 @@ public class CalendarFragment extends Fragment {
         });
         return rootView;
     }
-
-//    public void onCalendarClick(View view) {
-//        CalendarView calendarView=(CalendarView)view.findViewById(R.id.calendarView);
-//        calendarView.setOnDateChangeListener(new OnDateChangeListener() {
-//            @Override
-//            public void onSelectedDayChange(CalendarView view, int year, int month,
-//                                            int dayOfMonth) {
-//                String curDate = String.valueOf(dayOfMonth);
-//                Toast toast1 = Toast.makeText(getActivity(), curDate, Toast.LENGTH_SHORT);
-//                toast1.show();
-//                SQLiteOpenHelper HomeworkTrackerDatabaseHelper = new HomeworkTrackerDatabaseHelper(getActivity());
-//                try {
-//                    SQLiteDatabase db = HomeworkTrackerDatabaseHelper.getReadableDatabase();
-//                    Cursor cursor = db.query ("HOMEWORK",
-//                            new String[] {"DESCRIPTION", "CLASS_NAME", "TYPE", "DUE_DATE", "DUE_TIME", "PRIORITY", "REMINDER"},
-//                            null, null,
-//                            null, null, null);
-//                    //Move to the first record in the Cursor
-//                    if (cursor.moveToFirst()) {
-//                        String due_dateText = cursor.getString(3);
-//                        if(due_dateText == curDate){
-//                            String descriptionText = cursor.getString(0);
-//                            String class_nameText = cursor.getString(1);
-//                            String typeText = cursor.getString(2);
-//                            String due_timeText = cursor.getString(4);
-//                            String priorityText = cursor.getString(5);
-//                            String reminderText = cursor.getString(6);
-//                            TextView description = (TextView)view.findViewById(R.id.cal_hw_description);
-//                            TextView related_class = (TextView)view.findViewById(R.id.cal_related_class_name);
-//                            TextView type = (TextView)view.findViewById(R.id.cal_hw_type);
-//                            TextView due_date = (TextView)view.findViewById(R.id.cal_hw_due_date);
-//                            TextView due_time = (TextView)view.findViewById(R.id.cal_hw_due_time);
-//                            TextView priority = (TextView)view.findViewById(R.id.cal_hw_priority);
-//                            TextView reminder = (TextView)view.findViewById(R.id.cal_hw_reminder);
-//                            description.setText(descriptionText);
-//                            related_class.setText(class_nameText);
-//                            type.setText(typeText);
-//                            due_date.setText(due_dateText);
-//                            due_time.setText(due_timeText);
-//                            priority.setText(priorityText);
-//                            reminder.setText(reminderText);
-//                        }
-//                    }
-//                } catch(SQLiteException e) {
-//                    Toast toast = Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT);
-//                    toast.show();
-//                }
-//            }
-//        });
-//    }
 }
