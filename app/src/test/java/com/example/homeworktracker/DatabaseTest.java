@@ -5,11 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.content.Context;
-
 import androidx.test.core.app.ApplicationProvider;
-
 import com.example.homeworktracker.model.Class;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

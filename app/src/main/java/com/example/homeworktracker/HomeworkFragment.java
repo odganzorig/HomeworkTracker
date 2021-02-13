@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.icu.text.AlphabeticIndex;
 import android.os.Bundle;
-
+import android.content.ContentValues;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.Menu;
@@ -112,15 +112,21 @@ public class HomeworkFragment extends Fragment {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-d HH:mm");
                 Date due_date = sdf.parse(due_dateText + " " + due_timeText);
                 Date current_date = sdf.parse(formatter.format(currentDate));
-                View view = inflater.inflate(android.R.layout.simple_list_item_1, container, false);
-                View row = listHomework.getAdapter().getView(cursor.getPosition(), view, container);
                 if (current_date.compareTo(due_date) > 0) {
-                    row.setBackgroundColor(getResources().getColor(R.color.colorForLate));
-                    row.setBackgroundColor(Color.RED);
+                    String idText = cursor.getString(0);
+                    String descriptionText = cursor.getString(1);
+                    ContentValues cv = new ContentValues();
+                    cv.put("DESCRIPTION", descriptionText + "  Late!!!");
+                    try {
+                        db = HomeworkTrackerDatabaseHelper.getWritableDatabase();
+                        db.update("HOMEWORK", cv, "_id = ?", new String[]{idText});
+                    }catch(SQLiteException e) {
+                        Toast toast = Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                     Log.d("myTag", "Deadline has passed!");
                 }
             }
-            listAdapter.notifyDataSetChanged();
         } catch(SQLiteException e) {
             Toast toast = Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT);
             toast.show();
