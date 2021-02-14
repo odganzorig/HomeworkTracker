@@ -3,26 +3,17 @@ package com.example.homeworktracker;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
-import androidx.appcompat.widget.ShareActionProvider;
-import androidx.core.view.MenuItemCompat;
-import androidx.viewpager.widget.ViewPager;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
-import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity
                         implements NavigationView.OnNavigationItemSelectedListener {
-
-    //private ShareActionProvider shareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +22,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //inserting navigation drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
                 toolbar, R.string.nav_open_drawer, R.string.nav_close_drawer);
@@ -45,6 +37,7 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
     }
 
+    //assigning fragments to navigation drawer
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();

@@ -4,11 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
-import android.icu.text.AlphabeticIndex;
 import android.os.Bundle;
-import android.content.ContentValues;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,15 +15,12 @@ import android.content.Intent;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import android.util.Log;
-
-import com.example.homeworktracker.model.Homework;
 
 
 /**
@@ -90,6 +83,7 @@ public class HomeworkFragment extends Fragment {
         setHasOptionsMenu(true);
         ListView listHomework = (ListView) rootView.findViewById(R.id.list_homework_upcoming);
         ListView listHomeworkCompleted = (ListView) rootView.findViewById(R.id.list_homework_completed);
+        //access the database to get homework
         SQLiteOpenHelper HomeworkTrackerDatabaseHelper = new HomeworkTrackerDatabaseHelper(getActivity());
         try {
             db = HomeworkTrackerDatabaseHelper.getReadableDatabase();
@@ -103,6 +97,7 @@ public class HomeworkFragment extends Fragment {
                     new String[]{"DESCRIPTION"},
                     new int[]{android.R.id.text1},
                     0);
+            //setting the upcoming hw to the upcoming section
             listHomework.setAdapter(listAdapter);
             if (cursor.moveToFirst()) {
                 String due_dateText = cursor.getString(4);
@@ -112,18 +107,8 @@ public class HomeworkFragment extends Fragment {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-d HH:mm");
                 Date due_date = sdf.parse(due_dateText + " " + due_timeText);
                 Date current_date = sdf.parse(formatter.format(currentDate));
+                //if hw's deadline is passed do smth
                 if (current_date.compareTo(due_date) > 0) {
-                    String idText = cursor.getString(0);
-                    String descriptionText = cursor.getString(1);
-                    ContentValues cv = new ContentValues();
-                    cv.put("DESCRIPTION", descriptionText + "  Late!!!");
-                    try {
-                        db = HomeworkTrackerDatabaseHelper.getWritableDatabase();
-                        db.update("HOMEWORK", cv, "_id = ?", new String[]{idText});
-                    }catch(SQLiteException e) {
-                        Toast toast = Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
                     Log.d("myTag", "Deadline has passed!");
                 }
             }
@@ -145,6 +130,7 @@ public class HomeworkFragment extends Fragment {
                     new String[]{"DESCRIPTION"},
                     new int[]{android.R.id.text1},
                     0);
+            // setting the completed homework to the completed section
             listHomeworkCompleted.setAdapter(listAdapter1);
         } catch(SQLiteException e) {
             Toast toast = Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT);
@@ -196,6 +182,7 @@ public class HomeworkFragment extends Fragment {
         SimpleCursorAdapter adapter = (SimpleCursorAdapter) listHomework.getAdapter();
         adapter.changeCursor(newCursor);
         cursor = newCursor;
+
         Cursor newCursor1 = db.query("HOMEWORK_COMPLETED",
                 new String[]{"_id", "DESCRIPTION"},
                 null, null, null, null, null);

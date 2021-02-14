@@ -6,9 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +29,7 @@ public class TopFragment extends Fragment {
         setHasOptionsMenu(true);
         ListView listClasses = (ListView) rootView.findViewById(R.id.list_all_classes);
         ListView listHomework = (ListView) rootView.findViewById(R.id.list_all_homework);
+        //accessing database to display the classes and homework
         SQLiteOpenHelper HomeworkTrackerDatabaseHelper = new HomeworkTrackerDatabaseHelper(getActivity());
         try {
             db = HomeworkTrackerDatabaseHelper.getReadableDatabase();
@@ -43,6 +42,7 @@ public class TopFragment extends Fragment {
                     new String[]{"NAME"},
                     new int[]{android.R.id.text1},
                     0);
+            //assigning classes to the classes section
             listClasses.setAdapter(listAdapter);
         } catch(SQLiteException e) {
             Toast toast = Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT);
@@ -76,6 +76,7 @@ public class TopFragment extends Fragment {
                     new String[]{"DESCRIPTION"},
                     new int[]{android.R.id.text1},
                     0);
+            //assigning list of homework to the homework section
             listHomework.setAdapter(listAdapter1);
         } catch(SQLiteException e) {
             Toast toast = Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT);

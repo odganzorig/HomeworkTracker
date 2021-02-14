@@ -15,21 +15,21 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".CompletedActivity"
-            android:parentActivityName=".HomeworkFragment"></activity>
+            android:parentActivityName=".HomeworkFragment"/>
         <activity
             android:name=".HomeworkActivity"
-            android:parentActivityName=".HomeworkFragment"></activity>
+            android:parentActivityName=".HomeworkFragment"/>
         <activity
             android:name=".ClassActivity"
-            android:parentActivityName=".ClassesFragment"></activity>
+            android:parentActivityName=".ClassesFragment"/>
         <activity
             android:name=".AddClassesActivity"
             android:label="@string/add_classes"
-            android:parentActivityName=".ClassesFragment"></activity>
+            android:parentActivityName=".ClassesFragment"/>
         <activity
             android:name=".OrderActivity"
             android:label="@string/add_homework"
-            android:parentActivityName=".HomeworkFragment"></activity>
+            android:parentActivityName=".HomeworkFragment" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

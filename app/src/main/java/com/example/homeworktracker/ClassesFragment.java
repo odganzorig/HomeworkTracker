@@ -1,11 +1,8 @@
 package com.example.homeworktracker;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -79,6 +76,7 @@ public class ClassesFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_classes, container, false);
         setHasOptionsMenu(true);
         ListView listClasses = (ListView) rootView.findViewById(R.id.list_classes);
+        //display the classes in the database on a listview
         SQLiteOpenHelper HomeworkTrackerDatabaseHelper = new HomeworkTrackerDatabaseHelper(getActivity());
         try {
             db = HomeworkTrackerDatabaseHelper.getReadableDatabase();
@@ -91,6 +89,7 @@ public class ClassesFragment extends Fragment {
                     new String[]{"NAME"},
                     new int[]{android.R.id.text1},
                     0);
+            //assign the adapter to listview
             listClasses.setAdapter(listAdapter);
         } catch(SQLiteException e) {
             Toast toast = Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT);
@@ -128,7 +127,7 @@ public class ClassesFragment extends Fragment {
         cursor = newCursor;
     }
 
-
+    //closing the cursor and database
     @Override
     public void onDestroy(){
         super.onDestroy();

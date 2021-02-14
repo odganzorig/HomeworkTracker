@@ -3,7 +3,6 @@ package com.example.homeworktracker;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.homeworktracker.model.Class;
 import com.example.homeworktracker.model.Homework;
 
 public class CompletedActivity extends AppCompatActivity {
@@ -31,7 +29,7 @@ public class CompletedActivity extends AppCompatActivity {
 
         //Get the completed homework from the intent
         int cHwId = (Integer)getIntent().getExtras().get(EXTRA_COMPLETED_HOMEWORKID);
-        //Create a cursor
+        //Create a cursor to access and display completed hw in the database
         SQLiteOpenHelper HomeworkTrackerDatabaseHelper = new HomeworkTrackerDatabaseHelper(this);
         try {
             SQLiteDatabase db = HomeworkTrackerDatabaseHelper.getReadableDatabase();
@@ -77,11 +75,13 @@ public class CompletedActivity extends AppCompatActivity {
         }
     }
 
+    //delete method for completed hw
     public void onDeleteCompletedHomework(View view) {
         Homework sampleHomework = new Homework();
         TextView description = findViewById(R.id.chw_description);
         sampleHomework.description = description.getText().toString();
 
+        //deleting the completed hw from the database
         HomeworkTrackerDatabaseHelper databaseHelper = HomeworkTrackerDatabaseHelper.getInstance(this);
         if(databaseHelper.deleteCompletedHomework(sampleHomework) == 0)
         {

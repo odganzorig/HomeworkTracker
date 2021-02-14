@@ -3,23 +3,13 @@ package com.example.homeworktracker;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
-import android.widget.Button;
 import android.os.Bundle;
-import android.os.Build;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.example.homeworktracker.model.Class;
 
 public class AddClassesActivity extends AppCompatActivity {
@@ -32,55 +22,52 @@ public class AddClassesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-//        TimePicker classTime = (TimePicker)findViewById(R.id.classTime);
-//        classTime.setIs24HourView(true);
     }
 
+    //the main function for adding classes to the database
     public void onAddClass(View view) {
         Class sampleClass = new Class();
+        //getting the class name that the user provided and assigning to sample class
         EditText name = findViewById(R.id.name);
         sampleClass.class_name = name.getText().toString();
 
+        //getting the start date of the class that the user provided and assigning to sample class
         DatePicker startDate = (DatePicker) findViewById(R.id.startDate);
         int startDay = startDate.getDayOfMonth(); // get the selected day of the month
-        String startDay1 = String.valueOf(startDay);
+        String startDayText = String.valueOf(startDay);
         int startMonth = startDate.getMonth(); // get the selected month
-        String startMonth1 = String.valueOf(startMonth);
+        String startMonthText = String.valueOf(startMonth);
         int startYear = startDate.getYear(); // get the selected year
-        String startYear1 = String.valueOf(startYear);
-        sampleClass.start_date = startMonth1 + "/" + startDay1 + "/" + startYear1;
+        String startYearText = String.valueOf(startYear);
+        sampleClass.start_date = startMonthText + "/" + startDayText + "/" + startYearText;
 
+        //getting the end date of the class and assigning to sample class
         DatePicker endDate = (DatePicker) findViewById(R.id.endDate);
         int endDay = endDate.getDayOfMonth();
-        String endDay1 = String.valueOf(endDay);
+        String endDayText = String.valueOf(endDay);
         int endMonth = endDate.getMonth();
-        String endMonth1 = String.valueOf(endMonth);
+        String endMonthText = String.valueOf(endMonth);
         int endYear = endDate.getYear();
-        String endYear1 = String.valueOf(endYear);
-        sampleClass.end_date = endMonth1 + "/" + endDay1 + "/" + endYear1;
+        String endYearText = String.valueOf(endYear);
+        sampleClass.end_date = endMonthText + "/" + endDayText + "/" + endYearText;
 
+        //getting the instructor name and assigning to sample class
         EditText instructor = findViewById(R.id.instructor);
         sampleClass.instructor = instructor.getText().toString();
 
+        //getting the class days and assigning to sample class
         Spinner classDays = (Spinner) findViewById(R.id.class_days);
         sampleClass.class_days = String.valueOf(classDays.getSelectedItem());
 
+        //getting the class time and assigning to sample class
         TimePicker classTime = (TimePicker)findViewById(R.id.classTime);
-        String hour1, minute1;
-        if (Build.VERSION.SDK_INT >= 23 ){
-            int hour = classTime.getHour();
-            int minute = classTime.getMinute();
-            hour1 = String.valueOf(hour);
-            minute1 = String.valueOf(minute);
-        }
-        else{
-            int hour = classTime.getCurrentHour();
-            int minute = classTime.getCurrentMinute();
-            hour1 = String.valueOf(hour);
-            minute1 = String.valueOf(minute);
-        }
-        sampleClass.class_time = hour1 + ":" + minute1;
+        int hour = classTime.getHour();
+        int minute = classTime.getMinute();
+        String hourText = String.valueOf(hour);
+        String minuteText = String.valueOf(minute);
+        sampleClass.class_time = hourText + ":" + minuteText;
 
+        //adding the the class to the database and assigning to sample class
         HomeworkTrackerDatabaseHelper databaseHelper = HomeworkTrackerDatabaseHelper.getInstance(this);
         if(databaseHelper.addClass(sampleClass) == -1)
         {

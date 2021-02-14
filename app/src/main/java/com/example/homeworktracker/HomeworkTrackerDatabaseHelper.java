@@ -4,15 +4,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.CalendarContract;
 import android.util.Log;
-import android.widget.Toast;
 import java.util.List;
 import java.util.ArrayList;
 import android.database.Cursor;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.net.Uri;
 
 import com.example.homeworktracker.model.Class;
 import com.example.homeworktracker.model.Homework;
@@ -47,6 +42,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         updateMyDatabase(db, oldVersion, newVersion);
     }
 
+    //updating databases to version 2
     private void updateMyDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 1) {
             db.execSQL("CREATE TABLE HOMEWORK ("
@@ -136,6 +132,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         return classId;
     }
 
+    //insert the completed homework into the database
     public long addCompletedHomework(Homework homework) {
         SQLiteDatabase db = getWritableDatabase();
         long hwId = -1;
@@ -157,6 +154,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         return hwId;
     }
 
+    //for testing the database
     public void deleteAllClassesAndHomework() {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -171,6 +169,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    //displaying all the existing classes in the database
     public List<Class> getAllClasses() {
         List<Class> classes = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -201,6 +200,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         return classes;
     }
 
+    //deleting a class from the database
     public long deleteClass(Class class2) {
         SQLiteDatabase db = getWritableDatabase();
         long classId = 0;
@@ -216,6 +216,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         return classId;
     }
 
+    //deleting the homework from the database
     public long deleteHomework(Homework homework) {
         SQLiteDatabase db = getWritableDatabase();
         long hwId = 0;
@@ -231,6 +232,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         return hwId;
     }
 
+    //deleting the completed homework from the database
     public long deleteCompletedHomework(Homework homework) {
         SQLiteDatabase db = getWritableDatabase();
         long cHwId = 0;

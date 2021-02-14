@@ -3,20 +3,13 @@ package com.example.homeworktracker;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import android.content.ContentResolver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.ContentUris;
@@ -38,7 +31,7 @@ public class HomeworkActivity extends AppCompatActivity {
 
         //Get the homework from the intent
         int hwId = (Integer)getIntent().getExtras().get(EXTRA_HOMEWORKID);
-        //Create a cursor
+        //Create a cursor to access and display homework in the database
         SQLiteOpenHelper HomeworkTrackerDatabaseHelper = new HomeworkTrackerDatabaseHelper(this);
         try {
             SQLiteDatabase db = HomeworkTrackerDatabaseHelper.getReadableDatabase();
@@ -94,6 +87,7 @@ public class HomeworkActivity extends AppCompatActivity {
         }
     }
 
+    //method for completed button
     public void onCompletedClicked(View view) {
         Homework sampleHomework = new Homework();
         TextView description = findViewById(R.id.hw_description);
@@ -120,6 +114,7 @@ public class HomeworkActivity extends AppCompatActivity {
 
     }
 
+    //method for deleting the hw
     public void onDeleteHomework(View view) {
         Homework sampleHomework = new Homework();
         TextView description = findViewById(R.id.hw_description);

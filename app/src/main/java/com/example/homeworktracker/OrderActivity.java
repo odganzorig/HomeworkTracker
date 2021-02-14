@@ -3,21 +3,14 @@ package com.example.homeworktracker;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.icu.util.TimeZone;
-import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
-import com.google.android.material.snackbar.Snackbar;
 import java.text.SimpleDateFormat;
-import android.provider.AlarmClock;
 import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.View;
-import java.util.Date;
-import java.sql.Time;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.EditText;
@@ -25,20 +18,16 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.database.Cursor;
 import android.content.ContentUris;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import java.text.ParseException;
 import java.util.Calendar;
 import android.net.Uri;
 import android.content.Context;
 import android.content.ContentResolver;
-import com.example.homeworktracker.model.Class;
+
 import com.example.homeworktracker.model.Homework;
 
 
@@ -56,7 +45,8 @@ public class OrderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //populate spinner with class names from Classes table
+
+        //populate spinner with class names from Classes table in the database
         Spinner s = (Spinner) findViewById(R.id.related_class);
         ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -80,17 +70,23 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
+    //function for adding new homework to the database
     public void onAddHomework(View view) {
         Homework sampleHomework = new Homework();
+
+        //getting the hw description that the user provided and assigning to sample homework
         EditText description = findViewById(R.id.description);
         sampleHomework.description = description.getText().toString();
 
+        //getting the related class that the user provided and assigning to sample homework
         Spinner relatedClass = (Spinner) findViewById(R.id.related_class);
         sampleHomework.class_name = String.valueOf(relatedClass.getSelectedItem());
 
+        //getting the type of the hw and assigning to sample homework
         Spinner type = (Spinner) findViewById(R.id.type);
         sampleHomework.type = String.valueOf(type.getSelectedItem());
 
+        //getting the due date and assigning to sample homework
         DatePicker dueDate = (DatePicker) findViewById(R.id.dueDate);
         int startDay = dueDate.getDayOfMonth(); // get the selected day of the month
         int startMonth = dueDate.getMonth(); // get the selected month
@@ -101,6 +97,7 @@ public class OrderActivity extends AppCompatActivity {
         String dueDate1 = sdf.format(calendar.getTime());
         sampleHomework.due_date = dueDate1;
 
+        //getting the due time and assigning to sample homework
         TimePicker dueTime = (TimePicker)findViewById(R.id.dueTime);
         int hour = dueTime.getHour();
         int minute = dueTime.getMinute();
@@ -111,9 +108,11 @@ public class OrderActivity extends AppCompatActivity {
         String dueTime1 = sdf2.format(calendar2.getTime());
         sampleHomework.due_time = dueTime1;
 
+        //getting the priority and assigning to sample homework
         Spinner priority = (Spinner) findViewById(R.id.priority);
         sampleHomework.priority = String.valueOf(priority.getSelectedItem());
 
+        //getting the reminder date&time and assigning to sample homework
         DatePicker reminderDate = (DatePicker) findViewById(R.id.reminderDate);
         int reminderDay = reminderDate.getDayOfMonth(); // get the selected day of the month
         String reminderDay1 = String.valueOf(reminderDay);
@@ -136,11 +135,13 @@ public class OrderActivity extends AppCompatActivity {
         String reminderTime1 = sdf3.format(calendar3.getTime());
         sampleHomework.reminder_date_time = reminderTime1;
 
+        //creating the reminder as soon as user provides the input
         boolean result = checkPermission();
         if (result) {
             createReminder();
         }
 
+        //adding the new hw to the database
         HomeworkTrackerDatabaseHelper databaseHelper = HomeworkTrackerDatabaseHelper.getInstance(this);
         if(databaseHelper.addHomework(sampleHomework) == -1)
         {
@@ -152,7 +153,9 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
+    //function for creating a reminder on the device based on user's input
     private void createReminder() {
+        //accessing all the info required for creating an event reminder
         EditText description = findViewById(R.id.description);
         Spinner relatedClass = (Spinner) findViewById(R.id.related_class);
         String reminderTitle = description.getText().toString() + ", " + relatedClass.getSelectedItem();
@@ -182,6 +185,7 @@ public class OrderActivity extends AppCompatActivity {
         Calendar endTime = Calendar.getInstance();
         endTime.set(dueYear, dueMonth, dueDay, dueHour, dueMinute);
 
+        //adding the event reminder to the calendar on the device
         ContentResolver cr = getContentResolver();
         ContentValues values = new ContentValues();
         String calendarId = getGmailCalendarId(this);
@@ -196,9 +200,11 @@ public class OrderActivity extends AppCompatActivity {
         long eventID = Long.parseLong(uri.getLastPathSegment());
         setReminder(cr, eventID, 0);
         Toast.makeText(getApplicationContext(), "Reminder Created", Toast.LENGTH_SHORT).show();
+        //syncing the calendar
         syncCalendar(this, calendarId);
     }
 
+    //setting the type of the reminder for the event
     public void setReminder(ContentResolver cr, long eventID, int timeBefore) {
         try {
             ContentValues values = new ContentValues();
@@ -211,6 +217,7 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
+    //accessing the user's calendar id so that we can create event reminders
     public String getGmailCalendarId(Context c) {
         String calenderId = "";
         String[] projection = new String[]{"_id", "calendar_displayName"};
@@ -237,6 +244,7 @@ public class OrderActivity extends AppCompatActivity {
         return calenderId;
     }
 
+    //syncing the calendar so that information added can be viewed
     public static void syncCalendar(Context context, String calendarId) {
         try {
             ContentResolver cr = context.getContentResolver();
@@ -252,6 +260,7 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
+    //checking if the user granted us the permission to access his calendar
     public boolean checkPermission() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
@@ -263,6 +272,7 @@ public class OrderActivity extends AppCompatActivity {
         return true;
     }
 
+    //requesting permission to access users calendar
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {

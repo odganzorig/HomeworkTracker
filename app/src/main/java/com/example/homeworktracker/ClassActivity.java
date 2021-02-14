@@ -5,7 +5,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.TextView;
 import android.database.Cursor;
@@ -31,7 +30,7 @@ public class ClassActivity extends AppCompatActivity {
         //Get the class from the intent
         int classId = (Integer)getIntent().getExtras().get(EXTRA_CLASSID);
 
-        //Create a cursor
+        //Create a cursor to access and display the classes in the database
         SQLiteOpenHelper HomeworkTrackerDatabaseHelper = new HomeworkTrackerDatabaseHelper(this);
         try {
             SQLiteDatabase db = HomeworkTrackerDatabaseHelper.getReadableDatabase();
@@ -82,11 +81,13 @@ public class ClassActivity extends AppCompatActivity {
         }
     }
 
+    //function for delete the class
     public void onDeleteClass(View view) {
         Class sampleClass = new Class();
         TextView name = findViewById(R.id.class_name);
         sampleClass.class_name = name.getText().toString();
 
+        //deleting the class from the database
         HomeworkTrackerDatabaseHelper databaseHelper = HomeworkTrackerDatabaseHelper.getInstance(this);
         if(databaseHelper.deleteClass(sampleClass) == 0)
         {

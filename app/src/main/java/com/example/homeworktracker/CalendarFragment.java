@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
@@ -29,7 +28,7 @@ public class CalendarFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     final int N = 7; // total number of textviews to add
 
-    TextView[] myTextViews = new TextView[N]; // create an empty array;
+    TextView[] myTextViews = new TextView[N]; // create an empty array for textviews
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -72,12 +71,13 @@ public class CalendarFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
         CalendarView calendarView=(CalendarView)rootView.findViewById(R.id.calendarView);
+        //setting on click listener to the dates of the calendarview
         calendarView.setOnDateChangeListener(new OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
                 month = month + 1;
-                String curDate = String.valueOf(year + "-" + month + "-" + dayOfMonth);
+                String curDate = year + "-" + month + "-" + dayOfMonth;
                 SQLiteOpenHelper HomeworkTrackerDatabaseHelper = new HomeworkTrackerDatabaseHelper(getActivity());
                 try {
                     SQLiteDatabase db = HomeworkTrackerDatabaseHelper.getReadableDatabase();
@@ -90,6 +90,7 @@ public class CalendarFragment extends Fragment {
                     //Move to the first record in the Cursor
                     while (cursor.moveToNext()) {
                         String due_dateText = cursor.getString(3);
+                        //if the calendar date = the due date of the homework in the database show the info below the calendar
                         if(due_dateText.equals(curDate)){
                             String descriptionText = cursor.getString(0);
                             String class_nameText = cursor.getString(1);
