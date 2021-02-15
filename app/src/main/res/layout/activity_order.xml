@@ -40,7 +40,7 @@ tools:context=".OrderActivity">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select due date and time" />
+        android:text="@string/hw_due_date" />
 
     <DatePicker
         android:id="@+id/dueDate"
@@ -58,7 +58,7 @@ tools:context=".OrderActivity">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select priority" />
+        android:text="@string/hw_priority" />
 
     <Spinner
         android:id="@+id/priority"
@@ -70,7 +70,7 @@ tools:context=".OrderActivity">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set date and time for reminder" />
+        android:text="@string/reminder_date_time" />
 
     <DatePicker
         android:id="@+id/reminderDate"

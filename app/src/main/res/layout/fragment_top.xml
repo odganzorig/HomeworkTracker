@@ -14,14 +14,14 @@
             android:layout_height="fill_parent"
             android:padding="3dip"
             android:gravity="center"
-            android:text="Classes" />
+            android:text="@string/classes_tab" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:padding="3dip"
             android:gravity="center"
-            android:text="Homework" />
+            android:text="@string/homework_tab" />
 
     </TableRow>
 

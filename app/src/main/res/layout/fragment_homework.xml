@@ -14,14 +14,14 @@
             android:layout_height="fill_parent"
             android:padding="3dip"
             android:gravity="center"
-            android:text="Upcoming" />
+            android:text="@string/upcoming_section" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:padding="3dip"
             android:gravity="center"
-            android:text="Completed" />
+            android:text="@string/completed_section" />
 
     </TableRow>
     <TableRow

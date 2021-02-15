@@ -25,6 +25,20 @@
     <string name="hint3">Enter a due date (m/d/y)</string>
     <string name="hint4">Enter a class name</string>
     <string name="hint7">Enter an instructor name</string>
+    <string name="class_start_date">Choose the start date</string>
+    <string name="class_end_date">Choose the end date</string>
+    <string name="class_days">Choose the class days</string>
+    <string name="class_time">Choose a class time</string>
+    <string name="add_class_button">Add the class</string>
+    <string name="delete_class_button">Delete the class</string>
+    <string name="delete_completed_button">Delete the Homework</string>
+    <string name="completed_button">Completed!</string>
+    <string name="hw_due_date">Select due date and time</string>
+    <string name="hw_priority">Select the priority</string>
+    <string name="reminder_date_time">Set the date and time for reminder</string>
+    <string name="upcoming_section">Upcoming</string>
+    <string name="completed_section">Completed</string>
+
     <string-array name="homework_type">
         <item>Read</item>
         <item>Paper</item>
