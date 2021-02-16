@@ -18,6 +18,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
     private static final int DB_VERSION = 2;
     private static HomeworkTrackerDatabaseHelper sInstance;
     private static final String TAG = "MyActivity";
+    private static  final List<Class> classes = new ArrayList<>();
 
     public static synchronized HomeworkTrackerDatabaseHelper getInstance(Context context) {
         // Use the application context, which will ensure that you
@@ -161,6 +162,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         try {
             db.delete("HOMEWORK", null, null);
             db.delete("CLASSES", null, null);
+            db.delete("HOMEWORK_COMPLETED", null, null);
             db.setTransactionSuccessful();
         }catch (Exception e) {
             Log.d(TAG, "Error while trying to delete all homework and classes");
@@ -171,7 +173,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
 
     //displaying all the existing classes in the database
     public List<Class> getAllClasses() {
-        List<Class> classes = new ArrayList<>();
+        //List<Class> classes = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query ("CLASSES",
                 new String[] {"NAME", "START_DATE", "END_DATE", "INSTRUCTOR_NAME", "CLASS_DAYS", "CLASS_TIME"},
@@ -232,7 +234,37 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         return homework_list;
     }
 
-    //deleting a class from the database
+    //displaying all the existing homework in the database
+    public List<Homework> getAllCompletedHomework() {
+        List<Homework> completed_homework_list = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query ("HOMEWORK_COMPLETED",
+                new String[] {"DESCRIPTION", "CLASS_NAME", "TYPE", "DUE_DATE", "DUE_TIME"},
+                null,
+                null, null, null, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Homework newHomework = new Homework();
+                    newHomework.description = cursor.getString(0);
+                    newHomework.class_name = cursor.getString(1);
+                    newHomework.type = cursor.getString(2);
+                    newHomework.due_date = cursor.getString(3);
+                    newHomework.due_time = cursor.getString(4);
+                    completed_homework_list.add(newHomework);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Error while trying to get list of homework from database");
+        }finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return completed_homework_list;
+    }
+
+    // deleting a class from the database
     public long deleteClass(Class class2) {
         SQLiteDatabase db = getWritableDatabase();
         long classId = 0;
@@ -247,6 +279,7 @@ class HomeworkTrackerDatabaseHelper extends SQLiteOpenHelper {
         }
         return classId;
     }
+
 
     //deleting the homework from the database
     public long deleteHomework(Homework homework3) {

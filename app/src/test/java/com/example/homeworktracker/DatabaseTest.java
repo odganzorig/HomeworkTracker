@@ -35,7 +35,6 @@ public class DatabaseTest {
     private Homework testHomework2 = new Homework();
     private Homework testHomework3 = new Homework();
     private Homework testHomework4 = new Homework();
-    private Homework testHomework5 = new Homework();
 
     @Before
     public void setUpDatabase() {
@@ -48,14 +47,13 @@ public class DatabaseTest {
         testClass1.instructor = "instructor1";
         testClass1.class_days = "class_days1";
         testClass1.class_time = "class_time1";
+
         testClass2.class_name = "Class2";
         testClass2.start_date = "start_date2";
         testClass2.end_date = "end_date2";
         testClass2.instructor = "instructor2";
         testClass2.class_days = "class_days2";
         testClass2.class_time = "class_time2";
-        db.addClass(testClass1);
-        db.addClass(testClass2);
         //adding homework
         testHomework1.description = "hw1";
         testHomework1.class_name = "macro";
@@ -78,65 +76,64 @@ public class DatabaseTest {
         testHomework3.due_date = "feb 29th, 2021";
         testHomework3.due_time = "5pm";
         testHomework3.type = "paper";
-        testHomework3.priority = "very high";
-        testHomework3.reminder_date_time = "feb 26th, 12pm";
-        db.addHomework(testHomework1);
-        db.addHomework(testHomework2);
+
+        testHomework4.description = "hw4";
+        testHomework4.class_name = "micro";
+        testHomework4.due_date = "march 29th, 2021";
+        testHomework4.due_time = "2pm";
+        testHomework4.type = "quiz";
+        //db.deleteAllClassesAndHomework();
     }
 
     @Test
     public void checkClasses() throws Exception {
-        //HomeworkTrackerDatabaseHelper db = new HomeworkTrackerDatabaseHelper(null);
-        //SQLiteDatabase database = db.getReadableDatabase();
+        db.addClass(testClass1);
+        db.addClass(testClass2);
+        db.deleteClass(testClass1);
+        db.addClass(testClass1);
         List <Class> allClasses = db.getAllClasses();
         assertEquals(2, allClasses.size());
-        assertEquals("Class1", allClasses.get(0).class_name);
-        assertEquals("start_date1", allClasses.get(0).start_date);
-        assertEquals("end_date1", allClasses.get(0).end_date);
-        assertEquals("instructor1", allClasses.get(0).instructor);
-        assertEquals("class_days1", allClasses.get(0).class_days);
-        assertEquals("class_time1", allClasses.get(0).class_time);
-
-        assertEquals("Class2", allClasses.get(1).class_name);
-        assertEquals("start_date2", allClasses.get(1).start_date);
-        assertEquals("end_date2", allClasses.get(1).end_date);
-        assertEquals("instructor2", allClasses.get(1).instructor);
-        assertEquals("class_days2", allClasses.get(1).class_days);
-        assertEquals("class_time2", allClasses.get(1).class_time);
-    }
-
-    @Test
-    public void deleteAndCheckClasses() throws Exception {
-//        db.deleteClass(testClass1);
-        List <Class> allClasses = db.getAllClasses();
-//        assertEquals("Class2", allClasses.get(0).class_name);
-    }
-
-    @Test
-    public void AddAndCheckClasses() throws Exception {
-//        db.deleteClass(testClass1);
-        //db.addClass(testClass1);
-        List <Class> allClasses = db.getAllClasses();
-//        assertEquals("Class2", allClasses.get(0).class_name);
-//        assertEquals("Class1", allClasses.get(1).class_name);
+        assertEquals("Class2", allClasses.get(0).class_name);
+        assertEquals("Class1", allClasses.get(1).class_name);
     }
 
     @Test
     public void checkHomework() throws Exception {
-//        assertEquals("hw1", db.getAllHomework().get(0).description);
-        assertEquals(2, db.getAllHomework().size());
-//        assertEquals("hw1", allHomework.get(0).description);
-//        db.deleteHomework(testHomework1);
-//        assertEquals("hw2",allHomework.get(0).description);
+        db.addHomework(testHomework1);
+        db.addHomework(testHomework2);
+        db.deleteHomework(testHomework1);
+        db.addHomework(testHomework1);
+        db.addHomework(testHomework1);
+        List <Homework> allHomework = db.getAllHomework();
+        assertEquals(3, allHomework.size());
+        assertEquals("hw2", allHomework.get(0).description);
+        assertEquals("hw1", allHomework.get(1).description);
+        assertEquals("hw1", allHomework.get(2).description);
     }
 
     @Test
-    public void AddAndCheckHomework() throws Exception {
-//        db.addHomework(testHomework1);
-//        List <Homework> allHomework = db.getAllHomework();
-//        assertEquals("hw1", allHomework.get(0).description);
-//        assertEquals("hw3", allHomework.get(1).description);
-//        assertEquals("hw2", allHomework.get(2).description);
+    public void checkCompletedHomework() throws Exception {
+        db.addCompletedHomework(testHomework3);
+        db.addCompletedHomework(testHomework4);
+        db.deleteCompletedHomework(testHomework4);
+        db.addCompletedHomework(testHomework3);
+        db.addCompletedHomework(testHomework4);
+        List <Homework> allCompletedHomework = db.getAllCompletedHomework();
+        assertEquals(3, allCompletedHomework.size());
+        assertEquals("hw3", allCompletedHomework.get(0).description);
+        assertEquals("hw3", allCompletedHomework.get(1).description);
+        assertEquals("hw4", allCompletedHomework.get(2).description);
+    }
+
+    @Test
+    public void checkEmptyDatabase() throws Exception {
+        db.addClass(testClass1);
+        db.addHomework(testHomework1);
+        db.addCompletedHomework(testHomework3);
+        db.deleteAllClassesAndHomework();
+        assertEquals(0, db.getAllClasses().size());
+        assertEquals(0, db.getAllHomework().size());
+        assertEquals(0, db.getAllCompletedHomework().size());
     }
 
     @After
