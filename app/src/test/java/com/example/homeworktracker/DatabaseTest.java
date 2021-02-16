@@ -1,30 +1,22 @@
 package com.example.homeworktracker;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import com.example.homeworktracker.model.Class;
 import com.example.homeworktracker.model.Homework;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
 import java.util.List;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 
 @RunWith(RobolectricTestRunner.class)
 @Config(maxSdk = Build.VERSION_CODES.P, minSdk = Build.VERSION_CODES.P)
-//@Config(sdk = {Build.VERSION_CODES.O_MR1})
-//class SampleTest {}
 
 public class DatabaseTest {
     private HomeworkTrackerDatabaseHelper db;
@@ -40,7 +32,7 @@ public class DatabaseTest {
     public void setUpDatabase() {
         context = ApplicationProvider.getApplicationContext();
         db = HomeworkTrackerDatabaseHelper.getInstance(context);
-        //adding classes
+        //classes
         testClass1.class_name = "Class1";
         testClass1.start_date = "start_date1";
         testClass1.end_date = "end_date1";
@@ -54,7 +46,7 @@ public class DatabaseTest {
         testClass2.instructor = "instructor2";
         testClass2.class_days = "class_days2";
         testClass2.class_time = "class_time2";
-        //adding homework
+        //homework
         testHomework1.description = "hw1";
         testHomework1.class_name = "macro";
         testHomework1.due_date = "feb 25th, 2021";
@@ -62,7 +54,7 @@ public class DatabaseTest {
         testHomework1.type = "reading assignment";
         testHomework1.priority = "high";
         testHomework1.reminder_date_time = "feb 24th, 12pm";
-
+        //completed hw
         testHomework2.description = "hw2";
         testHomework2.class_name = "system fundamentals";
         testHomework2.due_date = "feb 28th, 2021";
@@ -82,9 +74,9 @@ public class DatabaseTest {
         testHomework4.due_date = "march 29th, 2021";
         testHomework4.due_time = "2pm";
         testHomework4.type = "quiz";
-        //db.deleteAllClassesAndHomework();
     }
 
+    //test for classes
     @Test
     public void checkClasses() throws Exception {
         db.addClass(testClass1);
@@ -97,6 +89,7 @@ public class DatabaseTest {
         assertEquals("Class1", allClasses.get(1).class_name);
     }
 
+    //test for homework
     @Test
     public void checkHomework() throws Exception {
         db.addHomework(testHomework1);
@@ -111,6 +104,7 @@ public class DatabaseTest {
         assertEquals("hw1", allHomework.get(2).description);
     }
 
+    //test for completed hw
     @Test
     public void checkCompletedHomework() throws Exception {
         db.addCompletedHomework(testHomework3);
@@ -125,6 +119,7 @@ public class DatabaseTest {
         assertEquals("hw4", allCompletedHomework.get(2).description);
     }
 
+    //test for checking empty database
     @Test
     public void checkEmptyDatabase() throws Exception {
         db.addClass(testClass1);
