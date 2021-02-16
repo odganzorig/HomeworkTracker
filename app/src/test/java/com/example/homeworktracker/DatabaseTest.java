@@ -75,6 +75,7 @@ public class DatabaseTest {
         testHomework4.type = "quiz";
     }
 
+    //test for checking classes
     @Test
     public void checkClasses() throws Exception {
         db.addClass(testClass1);
@@ -87,6 +88,7 @@ public class DatabaseTest {
         assertEquals("Class1", allClasses.get(1).class_name);
     }
 
+    //test for checking homework
     @Test
     public void checkHomework() throws Exception {
         db.addHomework(testHomework1);
@@ -101,6 +103,7 @@ public class DatabaseTest {
         assertEquals("hw1", allHomework.get(2).description);
     }
 
+    //test for completed hw
     @Test
     public void checkCompletedHomework() throws Exception {
         db.addCompletedHomework(testHomework3);
@@ -115,6 +118,7 @@ public class DatabaseTest {
         assertEquals("hw4", allCompletedHomework.get(2).description);
     }
 
+    //test for checking empty database
     @Test
     public void checkEmptyDatabase() throws Exception {
         db.addClass(testClass1);
