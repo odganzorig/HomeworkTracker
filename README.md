@@ -11,6 +11,11 @@ If focuses on providing:
 Requirements:
 The Android device requires at least API 21 (Android 5.0)
 
+How to test:
+• Install Android Studio
+• Install the required Android device on Android Studio
+• Choose the installed device and hit the Run button
+
 Functions:
 
 The application consists of four main tabs/sections: 
